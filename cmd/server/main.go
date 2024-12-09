@@ -4,8 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-
-	"github.com/CVWO/sample-go-app/internal/router"
+	"github.com/CATISNOTSODIUM/taggy-backend/internal/router"
 )
 
 func main() {
