@@ -1,4 +1,4 @@
-package users
+package Threads
 
 import (
 	"encoding/json"
@@ -12,12 +12,12 @@ import (
 )
 
 const (
-	ListUsers = "users.HandleList"
+	ListThreads = "Threads.HandleList"
 
-	SuccessfulListUsersMessage = "Successfully listed users"
+	SuccessfulListThreadsMessage = "Successfully listed Threads"
 	ErrRetrieveDatabase        = "Failed to retrieve database in %s"
-	ErrRetrieveUsers           = "Failed to retrieve users in %s"
-	ErrEncodeView              = "Failed to retrieve users in %s"
+	ErrRetrieveThreads           = "Failed to retrieve Threads in %s"
+	ErrEncodeView              = "Failed to retrieve Threads in %s"
 )
 
 func HandleList(w http.ResponseWriter, r *http.Request) (*api.Response, error) {
@@ -25,20 +25,20 @@ func HandleList(w http.ResponseWriter, r *http.Request) (*api.Response, error) {
 	defer db.Close()
 	
 	if err != nil {
-		return nil, errors.Wrap(err, fmt.Sprintf(ErrRetrieveDatabase, ListUsers))
+		return nil, errors.Wrap(err, fmt.Sprintf(ErrRetrieveDatabase, ListThreads))
 	}
-	users, err := query.GetUsers(db)
+	Threads, err := query.GetThreads(db)
 	if err != nil {
-		return nil, errors.Wrap(err, fmt.Sprintf(ErrRetrieveUsers, ListUsers))
+		return nil, errors.Wrap(err, fmt.Sprintf(ErrRetrieveThreads, ListThreads))
 	}
-	data, err := json.Marshal(users)
+	data, err := json.Marshal(Threads)
 	if err != nil {
-		return nil, errors.Wrap(err, fmt.Sprintf(ErrEncodeView, ListUsers))
+		return nil, errors.Wrap(err, fmt.Sprintf(ErrEncodeView, ListThreads))
 	}
 	return &api.Response{
 		Payload: api.Payload{
 			Data: data,
 		},
-		Messages: []string{SuccessfulListUsersMessage},
+		Messages: []string{SuccessfulListThreadsMessage},
 	}, nil
 }

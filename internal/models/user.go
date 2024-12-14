@@ -1,12 +1,10 @@
 package models
 
-import "fmt"
+
 
 type User struct {
-	ID   int    `json:"id"`
+	ID   string    `json:"id"`
 	Name string `json:"name"`
 }
 
-func (user *User) Greet() string {
-	return fmt.Sprintf("Hello, I am %s", user.Name)
-}
+
