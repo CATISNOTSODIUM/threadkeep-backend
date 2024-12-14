@@ -1,0 +1,56 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator db {
+  provider = "go run github.com/steebchen/prisma-client-go"
+}
+ 
+model User {
+    id          String  @default(uuid()) @id
+    name        String
+    threads     Thread[]
+    comments    Comment[]
+}
+
+model Tag {
+    id          String  @default(uuid()) @id
+    name        String
+    threads     Thread[]
+}
+
+model Thread {
+    id          String  @default(uuid()) @id
+    title       String
+    content     String
+    tags        Tag[]   
+	
+    likes       Int     @default(0) 
+    views       Int     @default(0) 
+    comments    Comment[]
+
+    user        User    @relation(fields: [userID], references: [id])
+    userID      String
+
+	createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Comment {
+    id          String  @default(uuid()) @id
+    title       String
+    content     String?
+	
+    likes       Int     @default(0) 
+    views       Int     @default(0) 
+
+    parent      Thread  @relation(fields: [parentID], references: [id])
+    parentID     String    
+
+    user        User    @relation(fields: [userID], references: [id])
+    userID      String
+
+	createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt    
+}
