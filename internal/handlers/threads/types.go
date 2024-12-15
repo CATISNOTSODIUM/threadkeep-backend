@@ -2,7 +2,6 @@ package Threads
 
 import (
 	"github.com/CATISNOTSODIUM/taggy-backend/internal/models"
-	
 )
 
 type ThreadCreateRequest struct {

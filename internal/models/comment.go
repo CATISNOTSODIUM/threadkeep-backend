@@ -1,6 +1,8 @@
 package models
 
-import ("time")
+import (
+	"time"
+)
 
 type Comment struct {
 	ID   		string  `json:"id"`
@@ -8,8 +10,8 @@ type Comment struct {
     Tags        []Tag   `json:"tags"`
     Likes       int     `json:"likes"`
     Views       int     `json:"views"`
-	User		User    `json:"user"`
-	Parent		Thread	`json:"parent"`
+	User		User  `json:"user"`
+	ParentID	string	`json:"parentID"`
     CreatedAt time.Time `json:"createdAt"`
     UpdatedAt time.Time `json:"updatedAt"`
 }

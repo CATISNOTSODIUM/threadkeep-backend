@@ -23,5 +23,6 @@ func GetRoutes() func(r chi.Router) {
 			json.NewEncoder(w).Encode(response)
 		})
 		ThreadRoutes(r)
+		CommentRoutes(r)
 	}
 }
