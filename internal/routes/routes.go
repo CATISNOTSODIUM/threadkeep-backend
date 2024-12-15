@@ -5,7 +5,6 @@ import (
 	"net/http"
 	handler "github.com/CATISNOTSODIUM/taggy-backend/internal/handlers"
 	users "github.com/CATISNOTSODIUM/taggy-backend/internal/handlers/users"
-	threads "github.com/CATISNOTSODIUM/taggy-backend/internal/handlers/threads"
 	"github.com/go-chi/chi/v5"
 )
 
@@ -13,8 +12,6 @@ import (
 
 func GetRoutes() func(r chi.Router) {
 	return func(r chi.Router) {
-		
-		
 		r.Get("/", func(w http.ResponseWriter, req *http.Request) {
 			response, _ := handler.Index(w, req)
 			w.Header().Set("Content-Type", "application/json")
@@ -25,15 +22,6 @@ func GetRoutes() func(r chi.Router) {
 			w.Header().Set("Content-Type", "application/json")
 			json.NewEncoder(w).Encode(response)
 		})
-		r.Get("/threads", func(w http.ResponseWriter, req *http.Request) {
-			response, _ := threads.HandleList(w, req)
-			w.Header().Set("Content-Type", "application/json")
-			json.NewEncoder(w).Encode(response)
-		})
-		r.Post("/threads/create", func(w http.ResponseWriter, req *http.Request) {
-			response, _ := threads.HandleCreate(w, req)
-			w.Header().Set("Content-Type", "application/json")
-			json.NewEncoder(w).Encode(response)
-		})
+		ThreadRoutes(r)
 	}
 }
