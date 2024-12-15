@@ -39,14 +39,12 @@ model Thread {
 
 model Comment {
     id          String  @default(uuid()) @id
-    title       String
-    content     String?
-	
+    content     String
     likes       Int     @default(0) 
     views       Int     @default(0) 
 
     parent      Thread  @relation(fields: [parentID], references: [id])
-    parentID     String    
+    parentID    String    
 
     user        User    @relation(fields: [userID], references: [id])
     userID      String
