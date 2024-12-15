@@ -12,18 +12,18 @@ import (
 )
 
 
-func HandleCreate(w http.ResponseWriter, r *http.Request) (*api.Response, error) {
+func HandleUpdate(w http.ResponseWriter, r *http.Request) (*api.Response, error) {
 	if r.Method != http.MethodPost {
 		errorMessage := fmt.Sprintf(ErrInvalidPostRequest, CreateNewThread)
 		http.Error(w, errorMessage, http.StatusMethodNotAllowed)
 		return nil, errors.New(errorMessage)
 	}
 
-	thread := &ThreadCreateRequest{}
+	thread := &ThreadUpdateRequest{}
 	err := json.NewDecoder(r.Body).Decode(thread)
 
 	if err != nil {
-		errorMessage := fmt.Sprintf(ErrBadRequest, CreateNewThread)
+		errorMessage := fmt.Sprintf(ErrBadRequest, UpdateThread)
 		http.Error(w, errorMessage, http.StatusBadRequest)
 		return nil, errors.Wrap(err, errorMessage)
 	}
@@ -31,17 +31,17 @@ func HandleCreate(w http.ResponseWriter, r *http.Request) (*api.Response, error)
 
 	db, err := database.Connect()
 	if err != nil {
-		errorMessage := fmt.Sprintf(ErrRetrieveDatabase, CreateNewThread)
+		errorMessage := fmt.Sprintf(ErrRetrieveDatabase, UpdateThread)
 		http.Error(w, errorMessage, http.StatusBadRequest)
 		return nil, errors.Wrap(err, errorMessage)
 	}
 
 	defer db.Close()
 
-	threadObject, err := mutation.CreateThread(db, &thread.User, thread.Title, thread.Content)
+	threadObject, err := mutation.UpdateThread(db, thread.ThreadID, &thread.User, thread.Title, thread.Content)
 	
 	if err != nil {
-		errorMessage := fmt.Sprintf(ErrCreateThread, CreateNewThread)
+		errorMessage := fmt.Sprintf(ErrUpdateThreads, UpdateThread)
 		http.Error(w, errorMessage, http.StatusBadRequest)
 		return nil, errors.Wrap(err, errorMessage)
 	}
@@ -49,7 +49,7 @@ func HandleCreate(w http.ResponseWriter, r *http.Request) (*api.Response, error)
 
 	data, err := json.Marshal(threadObject)
 	if err != nil {
-		errorMessage := fmt.Sprintf(ErrEncodeView, CreateNewThread)
+		errorMessage := fmt.Sprintf(ErrEncodeView, UpdateThread)
 		return nil, errors.Wrap(err, errorMessage)
 	}
 
@@ -57,7 +57,7 @@ func HandleCreate(w http.ResponseWriter, r *http.Request) (*api.Response, error)
 		Payload: api.Payload{
 			Data: data,
 		},
-		Messages: []string{SuccessfulCreateNewThreadMessage},
+		Messages: []string{fmt.Sprintf(SuccessfulUpdateThreadMessage, UpdateThread)},
 	}, nil
 	
 }
