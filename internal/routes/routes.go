@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"net/http"
 	handler "github.com/CATISNOTSODIUM/taggy-backend/internal/handlers"
-	users "github.com/CATISNOTSODIUM/taggy-backend/internal/handlers/users"
 	"github.com/go-chi/chi/v5"
 )
 
@@ -17,11 +16,7 @@ func GetRoutes() func(r chi.Router) {
 			w.Header().Set("Content-Type", "application/json")
 			json.NewEncoder(w).Encode(response)
 		})
-		r.Get("/users", func(w http.ResponseWriter, req *http.Request) {
-			response, _ := users.HandleList(w, req)
-			w.Header().Set("Content-Type", "application/json")
-			json.NewEncoder(w).Encode(response)
-		})
+		UserRoutes(r)
 		ThreadRoutes(r)
 		CommentRoutes(r)
 	}

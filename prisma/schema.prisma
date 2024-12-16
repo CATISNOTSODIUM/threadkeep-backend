@@ -9,7 +9,8 @@ generator db {
  
 model User {
     id          String  @default(uuid()) @id
-    name        String
+    name        String  @unique
+    password    String
     threads     Thread[]
     comments    Comment[]
 }

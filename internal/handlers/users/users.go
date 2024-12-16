@@ -11,22 +11,17 @@ import (
 	"github.com/pkg/errors"
 )
 
-const (
-	ListUsers = "users.HandleList"
-
-	SuccessfulListUsersMessage = "Successfully listed users"
-	ErrRetrieveDatabase        = "Failed to retrieve database in %s"
-	ErrRetrieveUsers           = "Failed to retrieve users in %s"
-	ErrEncodeView              = "Failed to retrieve users in %s"
-)
 
 func HandleList(w http.ResponseWriter, r *http.Request) (*api.Response, error) {
 	db, err := database.Connect()
-	defer db.Close()
+	
 	
 	if err != nil {
 		return nil, errors.Wrap(err, fmt.Sprintf(ErrRetrieveDatabase, ListUsers))
 	}
+
+	defer db.Close()
+
 	users, err := query.GetUsers(db)
 	if err != nil {
 		return nil, errors.Wrap(err, fmt.Sprintf(ErrRetrieveUsers, ListUsers))
