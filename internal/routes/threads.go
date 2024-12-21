@@ -31,6 +31,16 @@ func ThreadRoutes(r chi.Router) {
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(response)
 	})
+	r.Post("/threads/tags", func(w http.ResponseWriter, req *http.Request) {
+		response, _ := threads.HandleTag(w, req)
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(response)
+	})
+	r.Get("/threads/tags", func(w http.ResponseWriter, req *http.Request) {
+		response, _ := threads.HandleTagList(w, req)
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(response)
+	})
 	r.Post("/threads/reaction", func(w http.ResponseWriter, req *http.Request) {
 		response, _ := threads.HandleLikeThread(w, req)
 		w.Header().Set("Content-Type", "application/json")

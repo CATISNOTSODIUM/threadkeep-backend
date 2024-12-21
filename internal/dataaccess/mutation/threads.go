@@ -10,7 +10,7 @@ import (
 	"github.com/CATISNOTSODIUM/taggy-backend/prisma/db"
 )
 
-func CreateThread(currentDB * database.Database, user * models.User, title string, content string) (* models.Thread, error) {
+func CreateThread(currentDB * database.Database, user * models.User, title string, content string, tags [] models.Tag) (* models.Thread, error) {
 	ctx := context.Background()
 	threadObject, err := currentDB.Client.Thread.CreateOne(
 		db.Thread.Title.Set(title),
@@ -20,8 +20,36 @@ func CreateThread(currentDB * database.Database, user * models.User, title strin
 		),
 	).Exec(ctx)
 
+
+
 	if err != nil {
 		return nil, err
+	}
+
+	tagsList := [] models.Tag{}
+	
+	// create and link
+
+	// fix
+	for _, tag := range tags {
+		threadTagObject, err := currentDB.Client.TagsOnThreads.CreateOne(
+			db.TagsOnThreads.Thread.Link(
+				db.Thread.ID.Equals(threadObject.ID),
+			),
+			db.TagsOnThreads.Tag.Link(
+				db.Tag.ID.Equals(tag.ID),
+			),
+		).Exec(ctx)
+		
+		if err != nil {
+			return nil, err
+		}
+
+		tag := models.Tag {
+			ID: threadTagObject.TagID,
+		}	
+		tagsList = append(tagsList, tag)
+
 	}
 
 	thread := models.Thread {
@@ -31,6 +59,7 @@ func CreateThread(currentDB * database.Database, user * models.User, title strin
 		Likes: threadObject.Likes,
 		Views: threadObject.Views,
 		User: *user,
+		Tags: tagsList,
 		CreatedAt: threadObject.CreatedAt,
     	UpdatedAt: threadObject.UpdatedAt,
 	}

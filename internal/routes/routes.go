@@ -7,8 +7,6 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
-// dummy data structure
-
 func GetRoutes() func(r chi.Router) {
 	return func(r chi.Router) {
 		r.Get("/", func(w http.ResponseWriter, req *http.Request) {

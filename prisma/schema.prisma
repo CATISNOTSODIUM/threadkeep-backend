@@ -17,25 +17,33 @@ model User {
 
 model Tag {
     id          String  @default(uuid()) @id
-    name        String
-    threads     Thread[]
+    name        String  @unique
+    threads     TagsOnThreads[] 
 }
 
 model Thread {
     id          String  @default(uuid()) @id
     title       String
     content     String
-    tags        Tag[]   
 	
     likes       Int     @default(0) 
     views       Int     @default(0) 
     comments    Comment[]
+    tags        TagsOnThreads[]
 
     user        User    @relation(fields: [userID], references: [id])
     userID      String
 
 	createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+}
+
+model TagsOnThreads {
+  thread        Thread     @relation(fields: [threadID], references: [id])
+  threadID      String 
+  tag           Tag        @relation(fields: [tagID], references: [id])
+  tagID         String 
+  @@id([threadID, tagID])
 }
 
 model Comment {

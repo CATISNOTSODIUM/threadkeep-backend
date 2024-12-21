@@ -21,7 +21,6 @@ func HandleCreate(w http.ResponseWriter, r *http.Request) (*api.Response, error)
 
 	thread := &ThreadCreateRequest{}
 	err := json.NewDecoder(r.Body).Decode(thread)
-
 	if err != nil {
 		errorMessage := fmt.Sprintf(ErrBadRequest, CreateNewThread)
 		http.Error(w, errorMessage, http.StatusBadRequest)
@@ -38,9 +37,10 @@ func HandleCreate(w http.ResponseWriter, r *http.Request) (*api.Response, error)
 
 	defer db.Close()
 
-	threadObject, err := mutation.CreateThread(db, &thread.User, thread.Title, thread.Content)
+	threadObject, err := mutation.CreateThread(db, &thread.User, thread.Title, thread.Content, thread.Tags)
 	
 	if err != nil {
+		print(err.Error())
 		errorMessage := fmt.Sprintf(ErrCreateThread, CreateNewThread)
 		http.Error(w, errorMessage, http.StatusBadRequest)
 		return nil, errors.Wrap(err, errorMessage)

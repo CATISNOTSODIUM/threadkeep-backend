@@ -3,6 +3,7 @@ package Threads
 
 const (
 	ListThreads = "Threads.HandleList"
+	ListThreadsTag = "Threads.HandleTag"
 	RetrieveThread = "Threads.HandleRetrieve"
  	ReactThread = "Threads.HandleReactThread"
 	CreateNewThread = "Threads.HandleCreate"

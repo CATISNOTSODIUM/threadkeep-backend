@@ -8,6 +8,7 @@ type ThreadCreateRequest struct {
     Title       string 		`json:"title"`
     Content     string 		`json:"content"`
 	User		models.User `json:"user"`
+	Tags		[]models.Tag `json:"tags"`
 }
 
 type ThreadUpdateRequest struct {
