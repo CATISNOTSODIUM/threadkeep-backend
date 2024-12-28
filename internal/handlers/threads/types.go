@@ -24,14 +24,20 @@ type ThreadRetrieveRequest struct {
 }
 
 type ThreadLikeRequest struct {
+	UserID		   string 	`json:"userID"`
     ThreadID       string 	`json:"threadID"`
 	Reaction	   ReactionType `json:"reaction"`
 }
 
+type ThreadIsLikeRequest struct {
+	UserID		   string 	`json:"userID"`
+    ThreadID       string 	`json:"threadID"`
+}
+
 type ReactionType int32
 const (
+	VIEW 	ReactionType = 0
 	LIKE	ReactionType = 1
 	UNLIKE	ReactionType = 2
-	VIEW 	ReactionType = 0
 )
 

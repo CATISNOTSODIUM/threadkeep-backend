@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/CATISNOTSODIUM/taggy-backend/internal/api"
 	"github.com/CATISNOTSODIUM/taggy-backend/internal/dataaccess/query"
@@ -13,6 +14,16 @@ import (
 
 
 func HandleList(w http.ResponseWriter, r *http.Request) (*api.Response, error) {
+	_skip := r.URL.Query().Get("skip")
+	_max_per_page := r.URL.Query().Get("max_per_page")
+	skip, err := strconv.Atoi(_skip)
+	if err != nil {
+		return nil, errors.Wrap(err, fmt.Sprintf(ErrParsingParams, ListThreads))
+	}
+	max_per_page, err := strconv.Atoi(_max_per_page)
+	if err != nil {
+		return nil, errors.Wrap(err, fmt.Sprintf(ErrParsingParams, ListThreads))
+	}
 	db, err := database.Connect()
 	
 	if err != nil {
@@ -21,7 +32,8 @@ func HandleList(w http.ResponseWriter, r *http.Request) (*api.Response, error) {
 
 	defer db.Close()
 
-	threadsObject, err := query.GetThreads(db)
+
+	threadsObject, err := query.GetThreads(db, skip, max_per_page)
 	if err != nil {
 		return nil, errors.Wrap(err, fmt.Sprintf(ErrRetrieveThreads, ListThreads))
 	}
@@ -79,10 +91,37 @@ func HandleRetrieve(w http.ResponseWriter, r *http.Request) (*api.Response, erro
 		return nil, errors.Wrap(err, errorMessage)
 	}
 
+
 	return &api.Response{
 		Payload: api.Payload{
 			Data: data,
 		},
 		Messages: []string{fmt.Sprintf(SuccessfulRetrieveThreadsMessage, RetrieveThread)},
+	}, nil
+}
+
+func HandleCount(w http.ResponseWriter, r *http.Request) (*api.Response, error) {
+	db, err := database.Connect()
+	
+	if err != nil {
+		return nil, errors.Wrap(err, fmt.Sprintf(ErrRetrieveDatabase, CountThreads))
+	}
+
+	defer db.Close()
+
+	threadsObject, err := query.CountThreads(db)
+	if err != nil {
+		return nil, errors.Wrap(err, fmt.Sprintf(ErrRetrieveThreads, CountThreads))
+	}
+	data, err := json.Marshal(threadsObject)
+	if err != nil {
+		return nil, errors.Wrap(err, fmt.Sprintf(ErrEncodeView, CountThreads))
+	}
+	
+	return &api.Response{
+		Payload: api.Payload{
+			Data: data,
+		},
+		Messages: []string{SuccessfulListThreadsMessage},
 	}, nil
 }

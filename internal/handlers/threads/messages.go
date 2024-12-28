@@ -3,6 +3,7 @@ package Threads
 
 const (
 	ListThreads = "Threads.HandleList"
+	CountThreads = "Threads.HandleCount"
 	ListThreadsTag = "Threads.HandleTag"
 	RetrieveThread = "Threads.HandleRetrieve"
  	ReactThread = "Threads.HandleReactThread"
@@ -21,6 +22,7 @@ const (
 	ErrCreateThread	 				 = "Failed to create new thread in %s"
 	ErrInvalidPostRequest			 = "Method not allowed in %s"
 	ErrBadRequest					 = "Bad request in %s"
+	ErrParsingParams			= "Failed to parse URL params in %s"
 
 )
 

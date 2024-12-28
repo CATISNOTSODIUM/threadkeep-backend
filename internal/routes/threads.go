@@ -15,6 +15,11 @@ func ThreadRoutes(r chi.Router) {
 			w.Header().Set("Content-Type", "application/json")
 			json.NewEncoder(w).Encode(response)
 	})
+	r.Get("/threads/count", func(w http.ResponseWriter, req *http.Request) {
+			response, _ := threads.HandleCount(w, req)
+			w.Header().Set("Content-Type", "application/json")
+			json.NewEncoder(w).Encode(response)
+	})
 	// get individual thread
 	r.Post("/threads", func(w http.ResponseWriter, req *http.Request) {
 		response, _ := threads.HandleRetrieve(w, req)
@@ -43,6 +48,11 @@ func ThreadRoutes(r chi.Router) {
 	})
 	r.Post("/threads/reaction", func(w http.ResponseWriter, req *http.Request) {
 		response, _ := threads.HandleLikeThread(w, req)
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(response)
+	})
+	r.Post("/threads/reaction/isLike", func(w http.ResponseWriter, req *http.Request) {
+		response, _ := threads.HandleIsLikeThread(w, req)
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(response)
 	})

@@ -2,18 +2,20 @@ package query
 
 import (
 	"context"
+	"strconv"
+
 	"github.com/CATISNOTSODIUM/taggy-backend/internal/database"
 	"github.com/CATISNOTSODIUM/taggy-backend/internal/models"
 	"github.com/CATISNOTSODIUM/taggy-backend/prisma/db"
 )
 
 
-func GetThreads(currentDB * database.Database) ([]*models.Thread, error) {
+func GetThreads(currentDB * database.Database, skip int, max_per_page int) ([]*models.Thread, error) {
 	ctx := context.Background()
 
 	// fix add pagination system
 
-	threadObjects, err := currentDB.Client.Thread.FindMany().Take(7).OrderBy(
+	threadObjects, err := currentDB.Client.Thread.FindMany().Skip(skip).Take(max_per_page).OrderBy(
 		db.Thread.CreatedAt.Order(db.SortOrderDesc),
 	).With(
 		db.Thread.Tags.Fetch().With( 
@@ -21,6 +23,8 @@ func GetThreads(currentDB * database.Database) ([]*models.Thread, error) {
 		),
 	).With(
 		db.Thread.User.Fetch(),
+	).With(
+		db.Thread.Likes.Fetch(),
 	).Exec(ctx)
 
 	if err != nil {
@@ -51,7 +55,7 @@ func GetThreads(currentDB * database.Database) ([]*models.Thread, error) {
 			ID: threadObject.ID,
 			Title: threadObject.Title,
 			Content: threadObject.Content,
-			Likes: threadObject.Likes,
+			Likes: len(threadObject.Likes()),
 			Views: threadObject.Views,
 			User: user,
 			Tags: tags,
@@ -64,6 +68,22 @@ func GetThreads(currentDB * database.Database) ([]*models.Thread, error) {
 	return threads, nil
 }
 
+func CountThreads(currentDB * database.Database) (int, error) {
+	ctx := context.Background()
+	var res []struct{
+		NumberOfThreads  string     `json:"numberOfThreads"`
+	}
+	err := currentDB.Client.Prisma.QueryRaw(`SELECT count(*) as numberOfThreads FROM "Thread"`).Exec(ctx, &res)
+	if err != nil {
+		return -1, err
+	}
+	count, err := strconv.Atoi(res[0].NumberOfThreads)
+	if err != nil {
+		return -1, err
+	}
+	return count, nil
+}
+
 func GetThreadByID(currentDB * database.Database, id string) (* models.Thread, error) {
 	ctx := context.Background()
 	threadObject, err := currentDB.Client.Thread.FindUnique(db.Thread.ID.Equals(id)).With(
@@ -72,6 +92,8 @@ func GetThreadByID(currentDB * database.Database, id string) (* models.Thread, e
 		),
 	).With(
 		db.Thread.User.Fetch(),
+	).With(
+		db.Thread.Likes.Fetch(),
 	).Exec(ctx)
 
 	if err != nil {
@@ -97,7 +119,7 @@ func GetThreadByID(currentDB * database.Database, id string) (* models.Thread, e
 		ID: threadObject.ID,
 		Title: threadObject.Title,
 		Content: threadObject.Content,
-		Likes: threadObject.Likes,
+		Likes: len(threadObject.Likes()),
 		Views: threadObject.Views,
 		User: user,
 		Tags: tags,
@@ -131,4 +153,24 @@ func GetThreadTagsByID(currentDB * database.Database, id string) ([] models.Tag,
 	}
 
 	return tags, nil
+}
+
+// check if userID has liked the thread
+func IsLikeThread(currentDB * database.Database, userID string, threadID string) (bool, error) {
+	ctx := context.Background()
+	var res []struct {
+		IsLike db.RawBoolean `json:"is_like"`
+	}
+	err := currentDB.Client.Prisma.QueryRaw(
+		`SELECT EXISTS (
+			SELECT * FROM "Likes" 
+			WHERE "userID" = $1
+			AND   "threadID" = $2
+		) AS "is_like"`, userID, threadID, 
+	).Exec(ctx, &res)
+
+	if err != nil {
+		return false, err
+	}
+	return bool(res[0].IsLike), err
 }

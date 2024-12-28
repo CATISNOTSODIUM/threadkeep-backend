@@ -18,6 +18,8 @@ func CreateThread(currentDB * database.Database, user * models.User, title strin
 		db.Thread.User.Link(
 			db.User.ID.Equals(user.ID),
 		),
+	).With(
+		db.Thread.Likes.Fetch(),
 	).Exec(ctx)
 
 
@@ -56,7 +58,7 @@ func CreateThread(currentDB * database.Database, user * models.User, title strin
 		ID: threadObject.ID,
 		Title: threadObject.Title,
 		Content: threadObject.Content,
-		Likes: threadObject.Likes,
+		Likes: len(threadObject.Likes()),
 		Views: threadObject.Views,
 		User: *user,
 		Tags: tagsList,
@@ -70,7 +72,9 @@ func CreateThread(currentDB * database.Database, user * models.User, title strin
 func UpdateThread(currentDB * database.Database, id string, user * models.User, title string, content string) (* models.Thread, error) {
 	ctx := context.Background()
 	// find the thread
-	threadObjectDB := currentDB.Client.Thread.FindUnique(db.Thread.ID.Equals(id))
+	threadObjectDB := currentDB.Client.Thread.FindUnique(db.Thread.ID.Equals(id)).With(
+		db.Thread.Likes.Fetch(),
+	)
 	threadObject, err := threadObjectDB.Exec(ctx)
 	if err != nil {
 		return nil, err
@@ -92,7 +96,7 @@ func UpdateThread(currentDB * database.Database, id string, user * models.User, 
 		ID: threadObject.ID,
 		Title: threadObject.Title,
 		Content: threadObject.Content,
-		Likes: threadObject.Likes,
+		Likes: len(threadObject.Likes()),
 		Views: threadObject.Views,
 		User: *user,
 		CreatedAt: threadObject.CreatedAt,
@@ -114,11 +118,34 @@ func ViewThread(currentDB * database.Database, id string) (int, error) {
 	return threadObject.Count, nil
 }
 
-func LikeThread(currentDB * database.Database, id string) (int, error) {
+func LikeThread(currentDB * database.Database, userID string, threadID string) (int, error) {
+	ctx := context.Background()
+	likeObject, err := currentDB.Client.Likes.CreateOne(
+		db.Likes.User.Link(db.User.ID.Equals(userID)),
+		db.Likes.Thread.Link(db.Thread.ID.Equals(threadID)),
+	).With(
+		db.Likes.Thread.Fetch().With(
+			db.Thread.Likes.Fetch(),
+		),
+	).Exec(ctx)
+
+
+	if err != nil {
+		return 0, err
+	}
+
+	return len(likeObject.Thread().Likes()), nil
+}
+
+func UnlikeThread(currentDB * database.Database, userID string, threadID string) (int, error) {
 	ctx := context.Background()
 	threadObject, err := 
-		currentDB.Client.Prisma.ExecuteRaw(`UPDATE "Thread" SET likes = likes + 1 WHERE id = $1`, id).Exec(ctx)
-	
+		currentDB.Client.Prisma.ExecuteRaw(`
+			DELETE FROM "Likes"
+			WHERE 
+				"userID" = $1 AND
+				"threadID" = $2
+		`, userID, threadID).Exec(ctx)
 		if err != nil {
 		return 0, err
 	}
@@ -126,13 +153,16 @@ func LikeThread(currentDB * database.Database, id string) (int, error) {
 	return threadObject.Count, nil
 }
 
-func UnlikeThread(currentDB * database.Database, id string) (int, error) {
+func DeleteThread(currentDB * database.Database, threadID string) (int, error) {
 	ctx := context.Background()
-	threadObject, err := 
-		currentDB.Client.Prisma.ExecuteRaw(`UPDATE "Thread" SET likes = likes - 1 WHERE id = $1 AND likes > 0`, id).Exec(ctx)
-		if err != nil {
+	res, err := 
+		currentDB.Client.Prisma.ExecuteRaw(`
+			DELETE FROM "Threads"
+			WHERE 
+				"threadID" = $1
+		`, threadID).Exec(ctx)
+	if err != nil {
 		return 0, err
 	}
-
-	return threadObject.Count, nil
+	return res.Count, nil
 }

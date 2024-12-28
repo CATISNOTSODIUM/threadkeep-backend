@@ -12,6 +12,7 @@ model User {
     name        String  @unique
     password    String
     threads     Thread[]
+    likes       Likes[]
     comments    Comment[]
 }
 
@@ -26,17 +27,27 @@ model Thread {
     title       String
     content     String
 	
-    likes       Int     @default(0) 
+    likes       Likes[]
     views       Int     @default(0) 
     comments    Comment[]
+           
     tags        TagsOnThreads[]
 
     user        User    @relation(fields: [userID], references: [id])
     userID      String
 
-	createdAt DateTime @default(now())
+	  createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 }
+
+model Likes {
+  user          User             @relation(fields: [userID], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userID        String 
+  thread           Thread        @relation(fields: [threadID], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  threadID         String 
+  @@id([threadID, userID])
+}
+
 
 model TagsOnThreads {
   thread        Thread     @relation(fields: [threadID], references: [id])
@@ -52,10 +63,10 @@ model Comment {
     likes       Int     @default(0) 
     views       Int     @default(0) 
 
-    parent      Thread  @relation(fields: [parentID], references: [id])
+    parent      Thread  @relation(fields: [parentID], references: [id], onDelete: Cascade, onUpdate: Cascade)
     parentID    String    
 
-    user        User    @relation(fields: [userID], references: [id])
+    user        User    @relation(fields: [userID], references: [id], onDelete: Cascade, onUpdate: Cascade)
     userID      String
 
 	createdAt DateTime @default(now())
