@@ -18,6 +18,9 @@ type ThreadUpdateRequest struct {
 	User		models.User `json:"user"`
 }
 
+type ThreadDeleteRequest struct {
+	ThreadID    string 		`json:"threadID"`
+}
 
 type ThreadRetrieveRequest struct {
 	ThreadID       string 	`json:"threadID"`
@@ -33,6 +36,7 @@ type ThreadIsLikeRequest struct {
 	UserID		   string 	`json:"userID"`
     ThreadID       string 	`json:"threadID"`
 }
+
 
 type ReactionType int32
 const (

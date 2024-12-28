@@ -50,9 +50,9 @@ model Likes {
 
 
 model TagsOnThreads {
-  thread        Thread     @relation(fields: [threadID], references: [id])
+  thread        Thread     @relation(fields: [threadID], references: [id], onDelete: Cascade, onUpdate: Cascade)
   threadID      String 
-  tag           Tag        @relation(fields: [tagID], references: [id])
+  tag           Tag        @relation(fields: [tagID], references: [id], onDelete: Cascade, onUpdate: Cascade)
   tagID         String 
   @@id([threadID, tagID])
 }

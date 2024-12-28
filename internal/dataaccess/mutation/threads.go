@@ -157,9 +157,9 @@ func DeleteThread(currentDB * database.Database, threadID string) (int, error) {
 	ctx := context.Background()
 	res, err := 
 		currentDB.Client.Prisma.ExecuteRaw(`
-			DELETE FROM "Threads"
+			DELETE FROM "Thread"
 			WHERE 
-				"threadID" = $1
+				"id" = $1
 		`, threadID).Exec(ctx)
 	if err != nil {
 		return 0, err
