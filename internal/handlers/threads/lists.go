@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/CATISNOTSODIUM/taggy-backend/internal/api"
 	"github.com/CATISNOTSODIUM/taggy-backend/internal/dataaccess/query"
@@ -16,6 +17,9 @@ import (
 func HandleList(w http.ResponseWriter, r *http.Request) (*api.Response, error) {
 	_skip := r.URL.Query().Get("skip")
 	_max_per_page := r.URL.Query().Get("max_per_page")
+	name := r.URL.Query().Get("name")
+	_tags := r.URL.Query().Get("tags")
+	
 	skip, err := strconv.Atoi(_skip)
 	if err != nil {
 		return nil, errors.Wrap(err, fmt.Sprintf(ErrParsingParams, ListThreads))
@@ -24,6 +28,12 @@ func HandleList(w http.ResponseWriter, r *http.Request) (*api.Response, error) {
 	if err != nil {
 		return nil, errors.Wrap(err, fmt.Sprintf(ErrParsingParams, ListThreads))
 	}
+	tags := strings.Split(_tags, ",")
+	
+	if (_tags == ""){
+		tags = []string{}
+	}
+
 	db, err := database.Connect()
 	
 	if err != nil {
@@ -33,7 +43,7 @@ func HandleList(w http.ResponseWriter, r *http.Request) (*api.Response, error) {
 	defer db.Close()
 
 
-	threadsObject, err := query.GetThreads(db, skip, max_per_page)
+	threadsObject, err := query.GetThreads(db, skip, max_per_page, name, tags)
 	if err != nil {
 		return nil, errors.Wrap(err, fmt.Sprintf(ErrRetrieveThreads, ListThreads))
 	}

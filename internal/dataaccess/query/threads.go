@@ -2,6 +2,7 @@ package query
 
 import (
 	"context"
+	"fmt"
 	"strconv"
 
 	"github.com/CATISNOTSODIUM/taggy-backend/internal/database"
@@ -10,12 +11,30 @@ import (
 )
 
 
-func GetThreads(currentDB * database.Database, skip int, max_per_page int) ([]*models.Thread, error) {
+func GetThreads(currentDB * database.Database, skip int, max_per_page int, name string, tags []string) ([]*models.Thread, error) {
 	ctx := context.Background()
 
-	// fix add pagination system
 
-	threadObjects, err := currentDB.Client.Thread.FindMany().Skip(skip).Take(max_per_page).OrderBy(
+	var TagQuery []db.ThreadWhereParam
+	if (name != "") {
+		TagQuery = append(TagQuery, db.Thread.Title.Contains(name))
+		TagQuery = append(TagQuery, db.Thread.Title.Mode(db.QueryModeInsensitive))
+	} 
+
+	if (len((tags)) > 0) {
+		var TagIDQuery []db.TagsOnThreadsWhereParam
+		for _, tag := range tags {
+			TagIDQuery = append(TagIDQuery, db.TagsOnThreads.And(db.TagsOnThreads.TagID.Equals(tag)))
+		}
+		TagQuery = append(TagQuery, db.Thread.Tags.Some(db.TagsOnThreads.Or(TagIDQuery...))) 
+	}
+
+
+	filteredObject := currentDB.Client.Thread.FindMany()
+	if (len(TagQuery) > 0) {
+		filteredObject =  currentDB.Client.Thread.FindMany(TagQuery...)
+	}
+	threadObjects, err := filteredObject.Skip(skip).Take(max_per_page).OrderBy(
 		db.Thread.CreatedAt.Order(db.SortOrderDesc),
 	).With(
 		db.Thread.Tags.Fetch().With( 
@@ -28,6 +47,7 @@ func GetThreads(currentDB * database.Database, skip int, max_per_page int) ([]*m
 	).Exec(ctx)
 
 	if err != nil {
+		fmt.Println(err)
 		return nil, err
 	}
 
