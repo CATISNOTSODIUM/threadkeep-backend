@@ -2,17 +2,6 @@
 This is the Go backend for ThreadKeep ⬢. For more information, please refer to this [repository](https://github.com/CATISNOTSODIUM/threadkeep-frontend).
 
 ## Getting Started
-
-### Installing Go
-
-Download and install Go by following the instructions [here](https://go.dev/doc/install).
-
-### Running Locally
-1. [Fork](https://docs.github.com/en/get-started/quickstart/fork-a-repo#forking-a-repository) this repo.
-2. [Clone](https://docs.github.com/en/get-started/quickstart/fork-a-repo#cloning-your-forked-repository) **your** forked repo.
-3. Open your terminal and navigate to the directory containing your cloned project.
-4. Run `go run cmd/server/main.go` and head over to http://localhost:8000/users to view the response.
-
 ### Running with docker
 To start the server, execute
 ```bash
