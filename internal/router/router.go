@@ -1,7 +1,7 @@
 package router
 
 import (
-	"github.com/CATISNOTSODIUM/taggy-backend/internal/routes"
+	"github.com/CATISNOTSODIUM/threadkeep-backend/internal/routes"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/cors"
 )

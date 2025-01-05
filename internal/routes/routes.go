@@ -3,7 +3,7 @@ package routes
 import (
 	"encoding/json"
 	"net/http"
-	handler "github.com/CATISNOTSODIUM/taggy-backend/internal/handlers"
+	handler "github.com/CATISNOTSODIUM/threadkeep-backend/internal/handlers"
 	"github.com/go-chi/chi/v5"
 )
 

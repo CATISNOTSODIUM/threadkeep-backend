@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/CATISNOTSODIUM/taggy-backend/internal/dataaccess/mutation"
-	"github.com/CATISNOTSODIUM/taggy-backend/internal/database"
+	"github.com/CATISNOTSODIUM/threadkeep-backend/internal/dataaccess/mutation"
+	"github.com/CATISNOTSODIUM/threadkeep-backend/internal/database"
 )
 
 func main() {

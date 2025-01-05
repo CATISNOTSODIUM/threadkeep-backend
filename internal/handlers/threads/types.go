@@ -1,7 +1,7 @@
 package Threads
 
 import (
-	"github.com/CATISNOTSODIUM/taggy-backend/internal/models"
+	"github.com/CATISNOTSODIUM/threadkeep-backend/internal/models"
 )
 
 type ThreadCreateRequest struct {
@@ -43,5 +43,8 @@ const (
 	VIEW 	ReactionType = 0
 	LIKE	ReactionType = 1
 	UNLIKE	ReactionType = 2
+	// save thread
+	SAVED	ReactionType = 3 
+	UNSAVE	ReactionType = 4
 )
 

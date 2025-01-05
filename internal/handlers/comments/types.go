@@ -1,7 +1,7 @@
 package Comments
 
 import (
-	"github.com/CATISNOTSODIUM/taggy-backend/internal/models"
+	"github.com/CATISNOTSODIUM/threadkeep-backend/internal/models"
 )
 
 type CommentCreateRequest struct {

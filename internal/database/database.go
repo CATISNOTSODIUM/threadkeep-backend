@@ -1,7 +1,7 @@
 package database
 
 import (
-	"github.com/CATISNOTSODIUM/taggy-backend/prisma/db"
+	"github.com/CATISNOTSODIUM/threadkeep-backend/prisma/db"
 	"log"
 )
 

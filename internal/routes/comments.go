@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"github.com/go-chi/chi/v5"
-	comments "github.com/CATISNOTSODIUM/taggy-backend/internal/handlers/comments"
+	comments "github.com/CATISNOTSODIUM/threadkeep-backend/internal/handlers/comments"
 )
 
 

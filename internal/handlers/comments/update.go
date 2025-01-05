@@ -7,9 +7,9 @@ import (
 
 	"github.com/pkg/errors"
 
-	"github.com/CATISNOTSODIUM/taggy-backend/internal/api"
-	"github.com/CATISNOTSODIUM/taggy-backend/internal/dataaccess/mutation"
-	"github.com/CATISNOTSODIUM/taggy-backend/internal/database"
+	"github.com/CATISNOTSODIUM/threadkeep-backend/internal/api"
+	"github.com/CATISNOTSODIUM/threadkeep-backend/internal/dataaccess/mutation"
+	"github.com/CATISNOTSODIUM/threadkeep-backend/internal/database"
 )
 
 

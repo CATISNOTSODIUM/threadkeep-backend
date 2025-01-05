@@ -1,4 +1,4 @@
-module github.com/CATISNOTSODIUM/taggy-backend
+module github.com/CATISNOTSODIUM/threadkeep-backend
 
 go 1.23
 

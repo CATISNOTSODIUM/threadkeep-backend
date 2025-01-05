@@ -8,12 +8,13 @@ generator db {
 }
  
 model User {
-    id          String  @default(uuid()) @id
-    name        String  @unique
-    password    String
-    threads     Thread[]
-    likes       Likes[]
-    comments    Comment[]
+    id            String  @default(uuid()) @id
+    name          String  @unique
+    password      String
+    threads       Thread[]
+    likes         Likes[]
+    saved         Saved[]
+    comments      Comment[]
 }
 
 model Tag {
@@ -28,6 +29,7 @@ model Thread {
     content     String
 	
     likes       Likes[]
+    saved       Saved[]
     views       Int     @default(0) 
     comments    Comment[]
            
@@ -41,13 +43,20 @@ model Thread {
 }
 
 model Likes {
-  user          User             @relation(fields: [userID], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  userID        String 
+  user            User             @relation(fields: [userID], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userID          String 
   thread           Thread        @relation(fields: [threadID], references: [id], onDelete: Cascade, onUpdate: Cascade)
   threadID         String 
   @@id([threadID, userID])
 }
 
+model Saved {
+  user              User             @relation(fields: [userID], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userID            String 
+  thread           Thread         @relation(fields: [threadID], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  threadID         String 
+  @@id([threadID, userID])
+}
 
 model TagsOnThreads {
   thread        Thread     @relation(fields: [threadID], references: [id], onDelete: Cascade, onUpdate: Cascade)

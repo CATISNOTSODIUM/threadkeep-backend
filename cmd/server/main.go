@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"github.com/CATISNOTSODIUM/taggy-backend/internal/router"
+	"github.com/CATISNOTSODIUM/threadkeep-backend/internal/router"
 )
 
 func main() {

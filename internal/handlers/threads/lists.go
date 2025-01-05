@@ -7,9 +7,10 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/CATISNOTSODIUM/taggy-backend/internal/api"
-	"github.com/CATISNOTSODIUM/taggy-backend/internal/dataaccess/query"
-	"github.com/CATISNOTSODIUM/taggy-backend/internal/database"
+	"github.com/CATISNOTSODIUM/threadkeep-backend/internal/api"
+	"github.com/CATISNOTSODIUM/threadkeep-backend/internal/dataaccess/query"
+	"github.com/CATISNOTSODIUM/threadkeep-backend/internal/database"
+	"github.com/CATISNOTSODIUM/threadkeep-backend/internal/models"
 	"github.com/pkg/errors"
 )
 
@@ -19,14 +20,14 @@ func HandleList(w http.ResponseWriter, r *http.Request) (*api.Response, error) {
 	_max_per_page := r.URL.Query().Get("max_per_page")
 	name := r.URL.Query().Get("name")
 	_tags := r.URL.Query().Get("tags")
-	
 	skip, err := strconv.Atoi(_skip)
 	if err != nil {
-		return nil, errors.Wrap(err, fmt.Sprintf(ErrParsingParams, ListThreads))
+		skip = 0 // default
 	}
+	userID := r.URL.Query().Get("userID") // fetch saved thread
 	max_per_page, err := strconv.Atoi(_max_per_page)
 	if err != nil {
-		return nil, errors.Wrap(err, fmt.Sprintf(ErrParsingParams, ListThreads))
+		max_per_page = 10 // default
 	}
 	tags := strings.Split(_tags, ",")
 	
@@ -43,11 +44,19 @@ func HandleList(w http.ResponseWriter, r *http.Request) (*api.Response, error) {
 	defer db.Close()
 
 
-	threadsObject, err := query.GetThreads(db, skip, max_per_page, name, tags)
+	threadsObject := []*models.Thread{}
+	if (len(userID) > 0) { 
+		threadsObject, err = query.GetSavedThreads(db, userID)
+	} else {
+		threadsObject, err = query.GetThreads(db, skip, max_per_page, name, tags)
+	}
+
 	if err != nil {
 		return nil, errors.Wrap(err, fmt.Sprintf(ErrRetrieveThreads, ListThreads))
 	}
+
 	data, err := json.Marshal(threadsObject)
+
 	if err != nil {
 		return nil, errors.Wrap(err, fmt.Sprintf(ErrEncodeView, ListThreads))
 	}

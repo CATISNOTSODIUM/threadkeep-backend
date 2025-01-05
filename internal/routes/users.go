@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"github.com/go-chi/chi/v5"
-	users "github.com/CATISNOTSODIUM/taggy-backend/internal/handlers/users"
+	users "github.com/CATISNOTSODIUM/threadkeep-backend/internal/handlers/users"
 )
 
 func UserRoutes(r chi.Router) {

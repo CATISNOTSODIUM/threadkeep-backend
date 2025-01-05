@@ -3,11 +3,12 @@ package mutation
 import (
 	"context"
 	"errors"
+	"fmt"
 	"time"
 
-	"github.com/CATISNOTSODIUM/taggy-backend/internal/database"
-	"github.com/CATISNOTSODIUM/taggy-backend/internal/models"
-	"github.com/CATISNOTSODIUM/taggy-backend/prisma/db"
+	"github.com/CATISNOTSODIUM/threadkeep-backend/internal/database"
+	"github.com/CATISNOTSODIUM/threadkeep-backend/internal/models"
+	"github.com/CATISNOTSODIUM/threadkeep-backend/prisma/db"
 )
 
 func CreateThread(currentDB * database.Database, user * models.User, title string, content string, tags [] models.Tag) (* models.Thread, error) {
@@ -146,11 +147,39 @@ func UnlikeThread(currentDB * database.Database, userID string, threadID string)
 				"userID" = $1 AND
 				"threadID" = $2
 		`, userID, threadID).Exec(ctx)
-		if err != nil {
+	if err != nil {
 		return 0, err
 	}
 
 	return threadObject.Count, nil
+}
+
+
+func SaveThread(currentDB * database.Database, userID string, threadID string) (int, error) {
+	ctx := context.Background()
+	_, err := currentDB.Client.Saved.CreateOne(
+		db.Saved.User.Link(db.User.ID.Equals(userID)),
+		db.Saved.Thread.Link(db.Thread.ID.Equals(threadID)),
+	).Exec(ctx)
+	if err != nil {
+		fmt.Println(err)
+		return 0, err
+	}
+	return 1, nil
+}
+
+func UnsaveThread(currentDB * database.Database, userID string, threadID string) (int, error) {
+	ctx := context.Background()
+	fmt.Println(userID, threadID)
+	_, err := currentDB.Client.Saved.FindMany(
+		db.Saved.ThreadID.Equals(threadID),
+		db.Saved.UserID.Equals(userID),
+	).Delete().Exec(ctx)
+	if err != nil {
+		fmt.Println(err)
+		return 0, err
+	}
+	return 1, nil
 }
 
 func DeleteThread(currentDB * database.Database, threadID string) (int, error) {

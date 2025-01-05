@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/CATISNOTSODIUM/taggy-backend/internal/api"
-	"github.com/CATISNOTSODIUM/taggy-backend/internal/dataaccess/mutation"
-	"github.com/CATISNOTSODIUM/taggy-backend/internal/dataaccess/query"
-	"github.com/CATISNOTSODIUM/taggy-backend/internal/database"
+	"github.com/CATISNOTSODIUM/threadkeep-backend/internal/api"
+	"github.com/CATISNOTSODIUM/threadkeep-backend/internal/dataaccess/mutation"
+	"github.com/CATISNOTSODIUM/threadkeep-backend/internal/dataaccess/query"
+	"github.com/CATISNOTSODIUM/threadkeep-backend/internal/database"
 	"github.com/pkg/errors"
 )
 
@@ -97,6 +97,10 @@ func HandleLikeThread(w http.ResponseWriter, r *http.Request) (*api.Response, er
 		count, err = mutation.LikeThread(db, threadRequest.UserID, threadRequest.ThreadID)
 	} else if threadRequest.Reaction == UNLIKE {
 		count, err = mutation.UnlikeThread(db, threadRequest.UserID, threadRequest.ThreadID)
+	} else if threadRequest.Reaction == SAVED {
+		count, err = mutation.SaveThread(db, threadRequest.UserID, threadRequest.ThreadID)
+	} else if threadRequest.Reaction == UNSAVE {
+		count, err = mutation.UnsaveThread(db, threadRequest.UserID, threadRequest.ThreadID)
 	} else {
 		errorMessage := fmt.Sprintf(ErrBadRequest, ReactThread)
 		http.Error(w, errorMessage, http.StatusBadRequest)

@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/CATISNOTSODIUM/taggy-backend/internal/api"
-	"github.com/CATISNOTSODIUM/taggy-backend/internal/dataaccess/query"
-	"github.com/CATISNOTSODIUM/taggy-backend/internal/database"
+	"github.com/CATISNOTSODIUM/threadkeep-backend/internal/api"
+	"github.com/CATISNOTSODIUM/threadkeep-backend/internal/dataaccess/query"
+	"github.com/CATISNOTSODIUM/threadkeep-backend/internal/database"
 	"github.com/pkg/errors"
 )
 

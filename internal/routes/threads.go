@@ -3,7 +3,7 @@ package routes
 import (
 	"encoding/json"
 	"net/http"
-	threads "github.com/CATISNOTSODIUM/taggy-backend/internal/handlers/threads"
+	threads "github.com/CATISNOTSODIUM/threadkeep-backend/internal/handlers/threads"
 	"github.com/go-chi/chi/v5"
 )
 

@@ -2,10 +2,10 @@ package query
 
 import (
 	"context"
-	"github.com/CATISNOTSODIUM/taggy-backend/prisma/db"
-	"github.com/CATISNOTSODIUM/taggy-backend/internal/database"
-	"github.com/CATISNOTSODIUM/taggy-backend/internal/utils"
-	"github.com/CATISNOTSODIUM/taggy-backend/internal/models"
+	"github.com/CATISNOTSODIUM/threadkeep-backend/prisma/db"
+	"github.com/CATISNOTSODIUM/threadkeep-backend/internal/database"
+	"github.com/CATISNOTSODIUM/threadkeep-backend/internal/utils"
+	"github.com/CATISNOTSODIUM/threadkeep-backend/internal/models"
 )
 
 
