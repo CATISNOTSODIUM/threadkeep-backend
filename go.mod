@@ -1,4 +1,4 @@
-module github.com/CATISNOTSODIUM/taggy-backend
+module github.com/CATISNOTSODIUM/threadkeep-backend
 
 go 1.23
 
@@ -11,6 +11,7 @@ require (
 	github.com/dustin/go-humanize v1.0.1 // indirect
 	github.com/glebarez/go-sqlite v1.21.2 // indirect
 	github.com/glebarez/sqlite v1.11.0 // indirect
+	github.com/go-chi/cors v1.2.1 // indirect
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
@@ -21,7 +22,8 @@ require (
 	github.com/shopspring/decimal v1.4.0 // indirect
 	github.com/steebchen/prisma-client-go v0.45.0 // indirect
 	go.mongodb.org/mongo-driver/v2 v2.0.0-beta2 // indirect
-	golang.org/x/sys v0.7.0 // indirect
+	golang.org/x/crypto v0.31.0 // indirect
+	golang.org/x/sys v0.28.0 // indirect
 	golang.org/x/text v0.21.0 // indirect
 	gorm.io/gorm v1.25.12 // indirect
 	modernc.org/libc v1.22.5 // indirect

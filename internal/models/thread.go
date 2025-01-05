@@ -17,4 +17,6 @@ type Thread struct {
 
 	CreatedAt time.Time `json:"createdAt"`
     UpdatedAt time.Time `json:"updatedAt"`
+    
+    IsSaved     bool    `json:"isSaved"`
 }

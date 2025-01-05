@@ -7,13 +7,35 @@ This is the Go backend for ThreadKeep ⬢. For more information, please refer to
 
 Download and install Go by following the instructions [here](https://go.dev/doc/install).
 
-### Running the app
+### Running Locally
 1. [Fork](https://docs.github.com/en/get-started/quickstart/fork-a-repo#forking-a-repository) this repo.
 2. [Clone](https://docs.github.com/en/get-started/quickstart/fork-a-repo#cloning-your-forked-repository) **your** forked repo.
 3. Open your terminal and navigate to the directory containing your cloned project.
 4. Run `go run cmd/server/main.go` and head over to http://localhost:8000/users to view the response.
 
+### Running with docker
+To start the server, execute
+```bash
+docker build --network=host --tag thread-keep:latest .
+```
+To see a list of built containers, you can use the `docker images` command. You would expect to see something like this.
+```
+REPOSITORY       TAG       IMAGE ID       CREATED         SIZE
+thread-keep      latest    <id>         i <time>          <size>
+```
+To start the server, execute
+```bash
+docker run --env-file .env -d --name thread-keep -p 5000:5000 thread-keep:latest
+```
 
+If this server is settled properly, you would expect to find the message `"Welcome to our api server!"` at http://localhost:5000/.
+
+To see a list of running containers, you can use the `docker ps` command. You would expect something like this.
+```
+CONTAINER ID   IMAGE                COMMAND    CREATED         STATUS         PORTS                                       NAMES
+<id>           thread-keep:latest   "./main"   2 minutes ago   Up 2 minutes   0.0.0.0:5000->5000/tcp, :::5000->5000/tcp   thread-keep
+```
+To stop the container, execute `docker stop <id>` or `docker stop thread-keep`. To remove the container, run `docker rm thread-keep`.
 ### Navigating the code
 This is the main file structure. Note that this is simply *one of* various paradigms to organise your code, and is just a bare starting point.
 ```
