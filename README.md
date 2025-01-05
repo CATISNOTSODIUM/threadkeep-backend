@@ -1,10 +1,5 @@
-# CVWO Assignment Sample Golang App
-
-This sample Golang app is provided to help you experiment and practice web development fundamentals.
-It shows how certain functionality can be implemented.
-However, do note that this is **far from a model example**.
-After all, we want to see how you maximise your learning in web development
-and good software development practices.
+# ThreadKeep ⬢  - Your personal archive for online conversations.
+This is the Go backend for ThreadKeep ⬢. For more information, please refer to this [repository](https://github.com/CATISNOTSODIUM/threadkeep-frontend).
 
 ## Getting Started
 
