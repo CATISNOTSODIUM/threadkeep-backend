@@ -170,13 +170,11 @@ func SaveThread(currentDB * database.Database, userID string, threadID string) (
 
 func UnsaveThread(currentDB * database.Database, userID string, threadID string) (int, error) {
 	ctx := context.Background()
-	fmt.Println(userID, threadID)
 	_, err := currentDB.Client.Saved.FindMany(
 		db.Saved.ThreadID.Equals(threadID),
 		db.Saved.UserID.Equals(userID),
 	).Delete().Exec(ctx)
 	if err != nil {
-		fmt.Println(err)
 		return 0, err
 	}
 	return 1, nil

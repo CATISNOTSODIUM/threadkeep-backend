@@ -1,7 +1,28 @@
 # ThreadKeep ⬢  - Your personal archive for online conversations.
 This is the Go backend for ThreadKeep ⬢. For more information, please refer to this [repository](https://github.com/CATISNOTSODIUM/threadkeep-frontend).
 
+- [ThreadKeep ⬢  - Your personal archive for online conversations.](#threadkeep-----your-personal-archive-for-online-conversations)
+	- [Getting Started](#getting-started)
+		- [Configure your `.env` file](#configure-your-env-file)
+		- [Running locally](#running-locally)
+		- [Running with docker](#running-with-docker)
+	- [Navigating the code](#navigating-the-code)
+		- [Relevant directories/files](#relevant-directoriesfiles)
+			- [`middleware/JWT.go`](#middlewarejwtgo)
+			- [`handlers`](#handlers)
+	- [Next Steps](#next-steps)
+
 ## Getting Started
+### Configure your `.env` file
+Here is the example of `.env` file.
+```bash
+PORT=5000
+DATABASE_URL=[YOUR_POSTGRESQL_DB_URL]
+JWT_SECRET_KEY=[YOUR_JWT_SECRET_KEY]
+```
+For this project, you can host your PostGreSQL database locally (via docker) or using Neon database.
+### Running locally
+Before starting the server, make sure that `go` has been installed in your device. Then, execute `go mod download` to install relevant dependencies. To start the server, run `go run cmd/server/main.go`.
 ### Running with docker
 To start the server, execute
 ```bash
@@ -25,17 +46,19 @@ CONTAINER ID   IMAGE                COMMAND    CREATED         STATUS         PO
 <id>           thread-keep:latest   "./main"   2 minutes ago   Up 2 minutes   0.0.0.0:5000->5000/tcp, :::5000->5000/tcp   thread-keep
 ```
 To stop the container, execute `docker stop <id>` or `docker stop thread-keep`. To remove the container, run `docker rm thread-keep`.
-### Navigating the code
-This is the main file structure. Note that this is simply *one of* various paradigms to organise your code, and is just a bare starting point.
+## Navigating the code
+This is the main file structure of our project, based on [this repository](https://github.com/CVWO/sample-go-app).
 ```
 .
 ├── cmd
-│   ├── server
+│   ├── server      # Main server
+│   ├── tag         # Handle tag management
 ├── internal
 │   ├── api         # Encapsulates types and utilities related to the API
 │   ├── dataacess   # Data Access layer accesses data from the database
 │   ├── database    # Encapsulates the types and utilities related to the database
 │   ├── handlers    # Handler functions to respond to requests
+│   ├── middleware	# Handle middleware (such as authentication system)  
 │   ├── models      # Definitions of objects used in the application
 │   ├── router      # Encapsulates types and utilities related to the router
 │   ├── routes      # Defines routes that are used in the application
@@ -43,15 +66,58 @@ This is the main file structure. Note that this is simply *one of* various parad
 ├── go.mod
 └── go.sum
 ```
+### Relevant directories/files
+#### `middleware/JWT.go`
+This backend server utilizes JSON Web Tokens (JWT) for user authentication and to restrict access to API calls. We employ the golang-jwt library to generate new JWT tokens upon successful user login and to verify existing tokens for authentication purposes.
 
-Main directories/files to note:
-* `cmd` contains the main entry point for the application
-* `internal` holds most of the functional code for your project that is specific to the core logic of your application
-* `README.md` is a form of documentation about the project. It is what you are reading right now.
-* `go.mod` contains important metadata, for example, the dependencies in the project. See [here](https://go.dev/ref/mod) for more information
-* `go.sum` See [here](https://go.dev/ref/mod) for more information
+#### `handlers`
+Handler functions are responsible for providing `api` response based on HTTP request. Each subdirectory consists of `types.go`, `messages.go`, and basic CRUD logics (such as `create.go` and `update.go`.)
 
-Try changing some source code and see how the app changes.
+All handler functions are named by this format: `Handle[OP]`. Here is the example of `HandleDelete` from `handlers/threads/delete.go`.
+
+```go
+func HandleDelete(w http.ResponseWriter, r *http.Request) (*api.Response, error) {
+    // check if it is POST request or not
+	if r.Method != http.MethodPost {
+		err := errors.New(ErrInvalidPostRequest)
+		return utils.WrapHTTPError(err, http.StatusBadRequest)
+	}
+
+    // parse body
+	thread := &ThreadDeleteRequest{}
+	err := json.NewDecoder(r.Body).Decode(thread)
+
+	if err != nil {
+		return utils.WrapHTTPError(err, http.StatusBadRequest)
+	}
+
+    // connect to database
+	db, err := database.Connect()
+	if err != nil {
+		return utils.WrapHTTPError(err, http.StatusInternalServerError)
+	}
+
+	defer db.Close()
+
+    // perform database operation
+	threadObject, err := mutation.DeleteThread(db, thread.ThreadID)
+	
+	if err != nil {
+		return utils.WrapHTTPError(err, http.StatusBadRequest)
+	}
+	
+    // convert to JSON format
+	data, err := json.Marshal(threadObject)
+	if err != nil {
+		return utils.WrapHTTPError(err, http.StatusInternalServerError)
+	}
+
+    // response
+	return utils.WrapHTTPPayload(data, SuccessfulDeleteThread)
+}
+```
+
+Note that function from `utils` are designed to encapsulate error / response messages with function name. 
 
 ## Next Steps
 

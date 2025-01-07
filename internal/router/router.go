@@ -22,5 +22,8 @@ func Setup() chi.Router {
 }
 
 func setUpRoutes(r chi.Router) {
-	r.Group(routes.GetRoutes())
+	publicRoutes := routes.GetRoutes()
+	protectedRoutes := routes.GetProtectedRoutes()
+	r.Group(publicRoutes)
+	r.Group(protectedRoutes)
 }

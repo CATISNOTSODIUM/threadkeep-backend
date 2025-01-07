@@ -46,12 +46,19 @@ func VerifyUser(currentDB * database.Database, name string, password string) (* 
 	ctx := context.Background()
 	userObject, err := currentDB.Client.User.FindUnique(db.User.Name.Equals(name)).Exec(ctx)
 	if err != nil {
-		return nil,  false
+		return nil, false
 	}
 	if (password == string(utils.Decode(userObject.Password))) {
+		// verified
+		JWTToken, err := utils.CreateToken(name)
+		if err != nil {
+			return nil, false
+		}
+
 		return &models.User {
 			ID: userObject.ID,
 			Name: userObject.Name,
+			JWTToken: JWTToken,
 		}, true
 	}
 	return nil, false
