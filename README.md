@@ -2,14 +2,15 @@
 This is the Go backend for ThreadKeep ⬢. For more information, please refer to this [repository](https://github.com/CATISNOTSODIUM/threadkeep-frontend).
 
 - [ThreadKeep ⬢  - Your personal archive for online conversations.](#threadkeep-----your-personal-archive-for-online-conversations)
-  - [Getting Started](#getting-started)
-    - [Configure your `.env` file](#configure-your-env-file)
-    - [Running locally](#running-locally)
-    - [Running with docker](#running-with-docker)
-  - [Navigating the code](#navigating-the-code)
-    - [Relevant directories/files](#relevant-directoriesfiles)
-      - [handlers](#handlers)
-  - [Next Steps](#next-steps)
+	- [Getting Started](#getting-started)
+		- [Configure your `.env` file](#configure-your-env-file)
+		- [Running locally](#running-locally)
+		- [Running with docker](#running-with-docker)
+	- [Navigating the code](#navigating-the-code)
+		- [Relevant directories/files](#relevant-directoriesfiles)
+			- [`middleware/JWT.go`](#middlewarejwtgo)
+			- [`handlers`](#handlers)
+	- [Next Steps](#next-steps)
 
 ## Getting Started
 ### Configure your `.env` file
@@ -17,6 +18,7 @@ Here is the example of `.env` file.
 ```bash
 PORT=5000
 DATABASE_URL=[YOUR_POSTGRESQL_DB_URL]
+JWT_SECRET_KEY=[YOUR_JWT_SECRET_KEY]
 ```
 For this project, you can host your PostGreSQL database locally (via docker) or using Neon database.
 ### Running locally
@@ -56,6 +58,7 @@ This is the main file structure of our project, based on [this repository](https
 │   ├── dataacess   # Data Access layer accesses data from the database
 │   ├── database    # Encapsulates the types and utilities related to the database
 │   ├── handlers    # Handler functions to respond to requests
+│   ├── middleware	# Handle middleware (such as authentication system)  
 │   ├── models      # Definitions of objects used in the application
 │   ├── router      # Encapsulates types and utilities related to the router
 │   ├── routes      # Defines routes that are used in the application
@@ -64,7 +67,10 @@ This is the main file structure of our project, based on [this repository](https
 └── go.sum
 ```
 ### Relevant directories/files
-#### handlers
+#### `middleware/JWT.go`
+This backend server utilizes JSON Web Tokens (JWT) for user authentication and to restrict access to API calls. We employ the golang-jwt library to generate new JWT tokens upon successful user login and to verify existing tokens for authentication purposes.
+
+#### `handlers`
 Handler functions are responsible for providing `api` response based on HTTP request. Each subdirectory consists of `types.go`, `messages.go`, and basic CRUD logics (such as `create.go` and `update.go`.)
 
 All handler functions are named by this format: `Handle[OP]`. Here is the example of `HandleDelete` from `handlers/threads/delete.go`.
