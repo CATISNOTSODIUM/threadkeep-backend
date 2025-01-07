@@ -2,12 +2,11 @@ package users
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
-
 	"github.com/CATISNOTSODIUM/threadkeep-backend/internal/api"
 	"github.com/CATISNOTSODIUM/threadkeep-backend/internal/dataaccess/query"
 	"github.com/CATISNOTSODIUM/threadkeep-backend/internal/database"
+	"github.com/CATISNOTSODIUM/threadkeep-backend/internal/utils"
 	"github.com/pkg/errors"
 )
 
@@ -15,26 +14,21 @@ import (
 
 func HandleVerify(w http.ResponseWriter, r *http.Request) (*api.Response, error) {
 	if r.Method != http.MethodPost {
-		errorMessage := fmt.Sprintf(ErrInvalidPostRequest, VerifyUser)
-		http.Error(w, errorMessage, http.StatusMethodNotAllowed)
-		return nil, errors.New(errorMessage)
+		err := errors.New(ErrInvalidPostRequest)
+		return utils.WrapHTTPError(err, http.StatusBadRequest)
 	}
 
 	userRequest := &UserVerifyRequest{}
 	err := json.NewDecoder(r.Body).Decode(userRequest)
 
 	if err != nil {
-		errorMessage := fmt.Sprintf(ErrBadRequest, VerifyUser)
-		http.Error(w, errorMessage, http.StatusBadRequest)
-		return nil, errors.Wrap(err, errorMessage)
+		return utils.WrapHTTPError(err, http.StatusBadRequest)
 	}
 
 
 	db, err := database.Connect()
 	if err != nil {
-		errorMessage := fmt.Sprintf(ErrRetrieveDatabase, VerifyUser)
-		http.Error(w, errorMessage, http.StatusBadRequest)
-		return nil, errors.Wrap(err, errorMessage)
+		return utils.WrapHTTPError(err, http.StatusInternalServerError)
 	}
 
 	defer db.Close()
@@ -48,15 +42,9 @@ func HandleVerify(w http.ResponseWriter, r *http.Request) (*api.Response, error)
 	}
 	
 	if err != nil {
-		errorMessage := fmt.Sprintf(ErrEncodeView, VerifyUser)
-		return nil, errors.Wrap(err, errorMessage)
+		return utils.WrapHTTPError(err, http.StatusBadRequest)
 	}
 
-	return &api.Response{
-		Payload: api.Payload{
-			Data: data,
-		},
-		Messages: []string{SuccessfulVerifyUser},
-	}, nil
+	return utils.WrapHTTPPayload(data, SuccessfulVerifyUser)
 	
 }

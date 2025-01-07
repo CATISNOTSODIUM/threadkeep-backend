@@ -42,7 +42,7 @@ func HandleIsLikeThread(w http.ResponseWriter, r *http.Request) (*api.Response, 
 		return utils.WrapHTTPError(err, http.StatusBadRequest)
 	}
 
-	return utils.WrapHTTPPayload(data, ReactThread)
+	return utils.WrapHTTPPayload(data, SuccessfulUpdateThreadMessage)
 }
 
 

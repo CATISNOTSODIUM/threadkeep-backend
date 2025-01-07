@@ -1,6 +1,16 @@
 # ThreadKeep ⬢  - Your personal archive for online conversations.
 This is the Go backend for ThreadKeep ⬢. For more information, please refer to this [repository](https://github.com/CATISNOTSODIUM/threadkeep-frontend).
 
+- [ThreadKeep ⬢  - Your personal archive for online conversations.](#threadkeep-----your-personal-archive-for-online-conversations)
+  - [Getting Started](#getting-started)
+    - [Configure your `.env` file](#configure-your-env-file)
+    - [Running locally](#running-locally)
+    - [Running with docker](#running-with-docker)
+  - [Navigating the code](#navigating-the-code)
+    - [Relevant directories/files](#relevant-directoriesfiles)
+      - [handlers](#handlers)
+  - [Next Steps](#next-steps)
+
 ## Getting Started
 ### Configure your `.env` file
 Here is the example of `.env` file.
@@ -34,12 +44,13 @@ CONTAINER ID   IMAGE                COMMAND    CREATED         STATUS         PO
 <id>           thread-keep:latest   "./main"   2 minutes ago   Up 2 minutes   0.0.0.0:5000->5000/tcp, :::5000->5000/tcp   thread-keep
 ```
 To stop the container, execute `docker stop <id>` or `docker stop thread-keep`. To remove the container, run `docker rm thread-keep`.
-### Navigating the code
-This is the main file structure. Note that this is simply *one of* various paradigms to organise your code, and is just a bare starting point.
+## Navigating the code
+This is the main file structure of our project, based on [this repository](https://github.com/CVWO/sample-go-app).
 ```
 .
 ├── cmd
-│   ├── server
+│   ├── server      # Main server
+│   ├── tag         # Handle tag management
 ├── internal
 │   ├── api         # Encapsulates types and utilities related to the API
 │   ├── dataacess   # Data Access layer accesses data from the database
@@ -52,15 +63,67 @@ This is the main file structure. Note that this is simply *one of* various parad
 ├── go.mod
 └── go.sum
 ```
+### Relevant directories/files
+#### handlers
+Handler functions are responsible for providing `api` response based on HTTP request. Each subdirectory consists of `types.go`, `messages.go`, and basic CRUD logics (such as `create.go` and `update.go`.)
 
-Main directories/files to note:
-* `cmd` contains the main entry point for the application
-* `internal` holds most of the functional code for your project that is specific to the core logic of your application
-* `README.md` is a form of documentation about the project. It is what you are reading right now.
-* `go.mod` contains important metadata, for example, the dependencies in the project. See [here](https://go.dev/ref/mod) for more information
-* `go.sum` See [here](https://go.dev/ref/mod) for more information
+All handler functions are named by this format: `Handle[OP]`. Here is the example of `HandleDelete` from `handlers/threads/delete.go`.
 
-Try changing some source code and see how the app changes.
+```go
+func HandleDelete(w http.ResponseWriter, r *http.Request) (*api.Response, error) {
+    // check if it is POST request or not
+	if r.Method != http.MethodPost {
+		err := errors.New(ErrInvalidPostRequest)
+		return utils.WrapHTTPError(err, http.StatusBadRequest)
+	}
+
+    // parse body
+	thread := &ThreadDeleteRequest{}
+	err := json.NewDecoder(r.Body).Decode(thread)
+
+	if err != nil {
+		return utils.WrapHTTPError(err, http.StatusBadRequest)
+	}
+
+    // connect to database
+	db, err := database.Connect()
+	if err != nil {
+		return utils.WrapHTTPError(err, http.StatusInternalServerError)
+	}
+
+	defer db.Close()
+
+    // perform database operation
+	threadObject, err := mutation.DeleteThread(db, thread.ThreadID)
+	
+	if err != nil {
+		return utils.WrapHTTPError(err, http.StatusBadRequest)
+	}
+	
+    // convert to JSON format
+	data, err := json.Marshal(threadObject)
+	if err != nil {
+		return utils.WrapHTTPError(err, http.StatusInternalServerError)
+	}
+
+    // response
+	return utils.WrapHTTPPayload(data, SuccessfulDeleteThread)
+}
+```
+
+Note that function from `utils` are designed to encapsulate error / response messages with function name.  Here is an example.
+```json
+{
+"payload": {},
+"messages": [
+"github.com/CATISNOTSODIUM/threadkeep-backend/internal/
+handlers/threads.HandleReactThread 
+user facing error: Unique constraint failed on the 
+fields: (`threadID`,`userID`)\n"
+],
+"errorCode": 400
+}
+```
 
 ## Next Steps
 

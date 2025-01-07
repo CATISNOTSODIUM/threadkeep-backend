@@ -2,7 +2,6 @@ package Comments
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"github.com/pkg/errors"
@@ -10,31 +9,27 @@ import (
 	"github.com/CATISNOTSODIUM/threadkeep-backend/internal/api"
 	"github.com/CATISNOTSODIUM/threadkeep-backend/internal/dataaccess/mutation"
 	"github.com/CATISNOTSODIUM/threadkeep-backend/internal/database"
+	"github.com/CATISNOTSODIUM/threadkeep-backend/internal/utils"
 )
 
 
 func HandleUpdate(w http.ResponseWriter, r *http.Request) (*api.Response, error) {
 	if r.Method != http.MethodPost {
-		errorMessage := fmt.Sprintf(ErrInvalidPostRequest, UpdateComment)
-		http.Error(w, errorMessage, http.StatusMethodNotAllowed)
-		return nil, errors.New(errorMessage)
+		err := errors.New(ErrInvalidPostRequest)
+		return utils.WrapHTTPError(err, http.StatusBadRequest)
 	}
 
 	comment := &CommentUpdateRequest{}
 	err := json.NewDecoder(r.Body).Decode(comment)
 
 	if err != nil {
-		errorMessage := fmt.Sprintf(ErrBadRequest, UpdateComment)
-		http.Error(w, errorMessage, http.StatusBadRequest)
-		return nil, errors.Wrap(err, errorMessage)
+		return utils.WrapHTTPError(err, http.StatusBadRequest)
 	}
 
 
 	db, err := database.Connect()
 	if err != nil {
-		errorMessage := fmt.Sprintf(ErrRetrieveDatabase, UpdateComment)
-		http.Error(w, errorMessage, http.StatusBadRequest)
-		return nil, errors.Wrap(err, errorMessage)
+		return utils.WrapHTTPError(err, http.StatusInternalServerError)
 	}
 
 	defer db.Close()
@@ -42,23 +37,15 @@ func HandleUpdate(w http.ResponseWriter, r *http.Request) (*api.Response, error)
 	commentObject, err := mutation.UpdateComment(db, comment.CommentID, comment.Content)
 	
 	if err != nil {
-		errorMessage := fmt.Sprintf(ErrUpdateComment, UpdateComment)
-		http.Error(w, errorMessage, http.StatusBadRequest)
-		return nil, errors.Wrap(err, errorMessage)
+		return utils.WrapHTTPError(err, http.StatusBadRequest)
 	}
 	
 
 	data, err := json.Marshal(commentObject)
 	if err != nil {
-		errorMessage := fmt.Sprintf(ErrEncodeView, UpdateComment)
-		return nil, errors.Wrap(err, errorMessage)
+		return utils.WrapHTTPError(err, http.StatusInternalServerError)
 	}
 
-	return &api.Response{
-		Payload: api.Payload{
-			Data: data,
-		},
-		Messages: []string{fmt.Sprintf(SuccessfulUpdateCommentMessage, UpdateComment)},
-	}, nil
+	return utils.WrapHTTPPayload(data, SuccessfulUpdateCommentMessage)
 	
 }

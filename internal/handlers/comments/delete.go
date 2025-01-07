@@ -2,38 +2,32 @@ package Comments
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"github.com/CATISNOTSODIUM/threadkeep-backend/internal/api"
 	"github.com/CATISNOTSODIUM/threadkeep-backend/internal/dataaccess/mutation"
 	"github.com/CATISNOTSODIUM/threadkeep-backend/internal/database"
+	"github.com/CATISNOTSODIUM/threadkeep-backend/internal/utils"
 	"github.com/pkg/errors"
 )
 
 
 func HandleDelete(w http.ResponseWriter, r *http.Request) (*api.Response, error) {
 	if r.Method != http.MethodPost {
-		errorMessage := fmt.Sprintf(ErrInvalidPostRequest, DeleteComment)
-		http.Error(w, errorMessage, http.StatusMethodNotAllowed)
-		return nil, errors.New(errorMessage)
+		err := errors.New(ErrInvalidPostRequest)
+		return utils.WrapHTTPError(err, http.StatusBadRequest)
 	}
 
 	comment := &CommentDeleteRequest{}
 	err := json.NewDecoder(r.Body).Decode(comment)
-
 	if err != nil {
-		errorMessage := fmt.Sprintf(ErrBadRequest, DeleteComment)
-		http.Error(w, errorMessage, http.StatusBadRequest)
-		return nil, errors.Wrap(err, errorMessage)
+		return utils.WrapHTTPError(err, http.StatusBadRequest)
 	}
 
 
 	db, err := database.Connect()
 	if err != nil {
-		errorMessage := fmt.Sprintf(ErrRetrieveDatabase, DeleteComment)
-		http.Error(w, errorMessage, http.StatusBadRequest)
-		return nil, errors.Wrap(err, errorMessage)
+		return utils.WrapHTTPError(err, http.StatusInternalServerError)
 	}
 
 	defer db.Close()
@@ -41,23 +35,15 @@ func HandleDelete(w http.ResponseWriter, r *http.Request) (*api.Response, error)
 	threadObject, err := mutation.DeleteComment(db, comment.CommentID)
 	
 	if err != nil {
-		errorMessage := fmt.Sprintf(ErrDeleteComment, DeleteComment)
-		http.Error(w, errorMessage, http.StatusBadRequest)
-		return nil, errors.Wrap(err, errorMessage)
+		return utils.WrapHTTPError(err, http.StatusInternalServerError)
 	}
 	
 
 	data, err := json.Marshal(threadObject)
 	if err != nil {
-		errorMessage := fmt.Sprintf(ErrEncodeView, DeleteComment)
-		return nil, errors.Wrap(err, errorMessage)
+		return utils.WrapHTTPError(err, http.StatusInternalServerError)
 	}
 
-	return &api.Response{
-		Payload: api.Payload{
-			Data: data,
-		},
-		Messages: []string{fmt.Sprintf(SuccessfulDeleteComment, DeleteComment)},
-	}, nil
+	return utils.WrapHTTPPayload(data, SuccessfulDeleteComment)
 	
 }
