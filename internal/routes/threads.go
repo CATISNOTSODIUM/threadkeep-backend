@@ -52,7 +52,7 @@ func ThreadRoutes(r chi.Router) {
 		json.NewEncoder(w).Encode(response)
 	})
 	r.Post("/threads/reaction", func(w http.ResponseWriter, req *http.Request) {
-		response, _ := threads.HandleLikeThread(w, req)
+		response, _ := threads.HandleReactThread(w, req)
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(response)
 	})

@@ -2,6 +2,15 @@
 This is the Go backend for ThreadKeep ⬢. For more information, please refer to this [repository](https://github.com/CATISNOTSODIUM/threadkeep-frontend).
 
 ## Getting Started
+### Configure your `.env` file
+Here is the example of `.env` file.
+```bash
+PORT=5000
+DATABASE_URL=[YOUR_POSTGRESQL_DB_URL]
+```
+For this project, you can host your PostGreSQL database locally (via docker) or using Neon database.
+### Running locally
+Before starting the server, make sure that `go` has been installed in your device. Then, execute `go mod download` to install relevant dependencies. To start the server, run `go run cmd/server/main.go`.
 ### Running with docker
 To start the server, execute
 ```bash
