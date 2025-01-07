@@ -111,19 +111,7 @@ func HandleDelete(w http.ResponseWriter, r *http.Request) (*api.Response, error)
 }
 ```
 
-Note that function from `utils` are designed to encapsulate error / response messages with function name.  Here is an example.
-```json
-{
-"payload": {},
-"messages": [
-"github.com/CATISNOTSODIUM/threadkeep-backend/internal/
-handlers/threads.HandleReactThread 
-user facing error: Unique constraint failed on the 
-fields: (`threadID`,`userID`)\n"
-],
-"errorCode": 400
-}
-```
+Note that function from `utils` are designed to encapsulate error / response messages with function name. 
 
 ## Next Steps
 
