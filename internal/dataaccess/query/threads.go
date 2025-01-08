@@ -69,10 +69,6 @@ func GetThreads(currentDB * database.Database, skip int, max_per_page int, name 
 			tags = append(tags, tag)
 		} 
 
-		// if name is specified, check if this thread is saved or not.
-		if (name != "") {
-			// todo
-		}
 		thread := models.Thread {
 			ID: threadObject.ID,
 			Title: threadObject.Title,
@@ -83,7 +79,6 @@ func GetThreads(currentDB * database.Database, skip int, max_per_page int, name 
 			Tags: tags,
 			CreatedAt: threadObject.CreatedAt,
 			UpdatedAt: threadObject.UpdatedAt,
-			IsSaved: false,
 		}	
 		threads = append(threads, &thread)
 	}
