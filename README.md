@@ -1,4 +1,7 @@
 # ThreadKeep ⬢  - Your personal archive for online conversations.
+![Go](https://img.shields.io/badge/Go-00ADD8?logo=Go&logoColor=white&style=for-the-badge)
+![Prisma](https://img.shields.io/badge/Prisma-3982CE?style=for-the-badge&logo=Prisma&logoColor=white)
+
 This is the Go backend for ThreadKeep ⬢. For more information, please refer to this [repository](https://github.com/CATISNOTSODIUM/threadkeep-frontend).
 
 - [ThreadKeep ⬢  - Your personal archive for online conversations.](#threadkeep-----your-personal-archive-for-online-conversations)
@@ -11,7 +14,9 @@ This is the Go backend for ThreadKeep ⬢. For more information, please refer to
 			- [`middleware/JWT.go`](#middlewarejwtgo)
 			- [`handlers`](#handlers)
 	- [Next Steps](#next-steps)
-
+## Tech stack
+- **Go** server hosting
+- **PostgreSQL** database management with [go-prisma](https://goprisma.org/) ORM.
 ## Getting Started
 ### Configure your `.env` file
 Here is the example of `.env` file.
@@ -20,7 +25,7 @@ PORT=5000
 DATABASE_URL=[YOUR_POSTGRESQL_DB_URL]
 JWT_SECRET_KEY=[YOUR_JWT_SECRET_KEY]
 ```
-For this project, you can host your PostGreSQL database locally (via docker) or using Neon database.
+For this project, you can host your PostgreSQL database locally (via docker) or using Neon database.
 ### Running locally
 Before starting the server, make sure that `go` has been installed in your device. Then, execute `go mod download` to install relevant dependencies. To start the server, run `go run cmd/server/main.go`.
 ### Running with docker
@@ -118,9 +123,3 @@ func HandleDelete(w http.ResponseWriter, r *http.Request) (*api.Response, error)
 ```
 
 Note that function from `utils` are designed to encapsulate error / response messages with function name. 
-
-## Next Steps
-
-* This project uses [go-chi](https://github.com/go-chi/chi) as a web framework. Feel free to explore other web frameworks such as [gin-gonic](https://github.com/gin-gonic/gin). Compare their pros and cons and use whatever that best justifies the trade-offs.
-* Read up more on the [MVC framework](https://developer.mozilla.org/en-US/docs/Glossary/MVC) which this code is designed upon.
-* Sometimes, code formatting can get messy and opiniated. Do see how you can incoporate [linters](https://github.com/golangci/golangci-lint) to format your code.
