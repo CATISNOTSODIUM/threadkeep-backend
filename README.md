@@ -13,7 +13,6 @@ This is the Go backend for ThreadKeep ⬢. For more information, please refer to
 		- [Relevant directories/files](#relevant-directoriesfiles)
 			- [`middleware/JWT.go`](#middlewarejwtgo)
 			- [`handlers`](#handlers)
-	- [Next Steps](#next-steps)
 ## Tech stack
 - **Go** server hosting
 - **PostgreSQL** database management with [go-prisma](https://goprisma.org/) ORM.
