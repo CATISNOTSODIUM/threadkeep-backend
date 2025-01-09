@@ -24,7 +24,8 @@ PORT=5000
 DATABASE_URL=[YOUR_POSTGRESQL_DB_URL]
 JWT_SECRET_KEY=[YOUR_JWT_SECRET_KEY]
 ```
-For this project, you can host your PostgreSQL database locally (via docker) or using Neon database.
+- `DATABASE_URL`: For this project, you can host your PostgreSQL database locally (via docker) or using Neon database.
+- `JWT_SECRET_KEY`: You can choose any string you wish to choose.
 ### Running locally
 Before starting the server, make sure that `go` has been installed in your device. Then, execute `go mod download` to install relevant dependencies. To start the server, run `go run cmd/server/main.go`.
 ### Running with docker
