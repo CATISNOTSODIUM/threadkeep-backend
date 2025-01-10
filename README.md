@@ -1,4 +1,7 @@
 # ThreadKeep ⬢  - Your personal archive for online conversations.
+![Go](https://img.shields.io/badge/Go-00ADD8?logo=Go&logoColor=white&style=for-the-badge)
+![Prisma](https://img.shields.io/badge/Prisma-3982CE?style=for-the-badge&logo=Prisma&logoColor=white)
+
 This is the Go backend for ThreadKeep ⬢. For more information, please refer to this [repository](https://github.com/CATISNOTSODIUM/threadkeep-frontend).
 
 - [ThreadKeep ⬢  - Your personal archive for online conversations.](#threadkeep-----your-personal-archive-for-online-conversations)
@@ -10,19 +13,28 @@ This is the Go backend for ThreadKeep ⬢. For more information, please refer to
 		- [Relevant directories/files](#relevant-directoriesfiles)
 			- [`middleware/JWT.go`](#middlewarejwtgo)
 			- [`handlers`](#handlers)
-	- [Next Steps](#next-steps)
-
+## Tech stack
+- **Go** server hosting
+- **PostgreSQL** database management with [go-prisma](https://goprisma.org/) ORM.
+- **Docker** and **Google cloud** for deployment
 ## Getting Started
-### Configure your `.env` file
-Here is the example of `.env` file.
+### Requirements
+- `go` (This project is developed based on `go1.23.4 linux/amd64`.)
+- `PostgreSQL` database. For this project, you can host your PostgreSQL database locally (via docker) or using Neon database.
+- `Docker` (Optional) This is in case you want to build and run with docker.
+Make sure to add your `.env` file before starting the server. Here is the example of `.env` file.
 ```bash
-PORT=5000
+PORT=8080
 DATABASE_URL=[YOUR_POSTGRESQL_DB_URL]
 JWT_SECRET_KEY=[YOUR_JWT_SECRET_KEY]
 ```
-For this project, you can host your PostGreSQL database locally (via docker) or using Neon database.
+- `DATABASE_URL`: For this project, you can host your PostgreSQL database locally (via docker) or using Neon database.
+- `JWT_SECRET_KEY`: You can choose any string you wish to choose.
 ### Running locally
-Before starting the server, make sure that `go` has been installed in your device. Then, execute `go mod download` to install relevant dependencies. To start the server, run `go run cmd/server/main.go`.
+```bash
+go mod download
+go run cmd/server/main.go
+```
 ### Running with docker
 To start the server, execute
 ```bash
@@ -46,6 +58,8 @@ CONTAINER ID   IMAGE                COMMAND    CREATED         STATUS         PO
 <id>           thread-keep:latest   "./main"   2 minutes ago   Up 2 minutes   0.0.0.0:5000->5000/tcp, :::5000->5000/tcp   thread-keep
 ```
 To stop the container, execute `docker stop <id>` or `docker stop thread-keep`. To remove the container, run `docker rm thread-keep`.
+## Deployment
+This project used Google Cloud Platform (GCP) for deployment. Please follow the instruction from this [link](https://medium.com/novai-cloud-computing/gcp-docker-golang-deploying-a-go-application-to-google-cloud-container-registry-and-cloud-run-b5056324b5d0) for more details. 
 ## Navigating the code
 This is the main file structure of our project, based on [this repository](https://github.com/CVWO/sample-go-app).
 ```
@@ -118,9 +132,3 @@ func HandleDelete(w http.ResponseWriter, r *http.Request) (*api.Response, error)
 ```
 
 Note that function from `utils` are designed to encapsulate error / response messages with function name. 
-
-## Next Steps
-
-* This project uses [go-chi](https://github.com/go-chi/chi) as a web framework. Feel free to explore other web frameworks such as [gin-gonic](https://github.com/gin-gonic/gin). Compare their pros and cons and use whatever that best justifies the trade-offs.
-* Read up more on the [MVC framework](https://developer.mozilla.org/en-US/docs/Glossary/MVC) which this code is designed upon.
-* Sometimes, code formatting can get messy and opiniated. Do see how you can incoporate [linters](https://github.com/golangci/golangci-lint) to format your code.
