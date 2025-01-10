@@ -24,7 +24,7 @@ This is the Go backend for ThreadKeep ⬢. For more information, please refer to
 - `Docker` (Optional) This is in case you want to build and run with docker.
 Make sure to add your `.env` file before starting the server. Here is the example of `.env` file.
 ```bash
-PORT=5000
+PORT=8080
 DATABASE_URL=[YOUR_POSTGRESQL_DB_URL]
 JWT_SECRET_KEY=[YOUR_JWT_SECRET_KEY]
 ```
