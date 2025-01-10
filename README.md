@@ -16,9 +16,13 @@ This is the Go backend for ThreadKeep ⬢. For more information, please refer to
 ## Tech stack
 - **Go** server hosting
 - **PostgreSQL** database management with [go-prisma](https://goprisma.org/) ORM.
+- **Docker** and **Google cloud** for deployment
 ## Getting Started
-### Configure your `.env` file
-Here is the example of `.env` file.
+### Requirements
+- `go` (This project is developed based on `go1.23.4 linux/amd64`.)
+- `PostgreSQL` database. For this project, you can host your PostgreSQL database locally (via docker) or using Neon database.
+- `Docker` (Optional) This is in case you want to build and run with docker.
+Make sure to add your `.env` file before starting the server. Here is the example of `.env` file.
 ```bash
 PORT=5000
 DATABASE_URL=[YOUR_POSTGRESQL_DB_URL]
@@ -27,7 +31,10 @@ JWT_SECRET_KEY=[YOUR_JWT_SECRET_KEY]
 - `DATABASE_URL`: For this project, you can host your PostgreSQL database locally (via docker) or using Neon database.
 - `JWT_SECRET_KEY`: You can choose any string you wish to choose.
 ### Running locally
-Before starting the server, make sure that `go` has been installed in your device. Then, execute `go mod download` to install relevant dependencies. To start the server, run `go run cmd/server/main.go`.
+```bash
+go mod download
+go run cmd/server/main.go
+```
 ### Running with docker
 To start the server, execute
 ```bash
@@ -51,6 +58,8 @@ CONTAINER ID   IMAGE                COMMAND    CREATED         STATUS         PO
 <id>           thread-keep:latest   "./main"   2 minutes ago   Up 2 minutes   0.0.0.0:5000->5000/tcp, :::5000->5000/tcp   thread-keep
 ```
 To stop the container, execute `docker stop <id>` or `docker stop thread-keep`. To remove the container, run `docker rm thread-keep`.
+## Deployment
+This project used Google Cloud Platform (GCP) for deployment. Please follow the instruction from this [link](https://medium.com/novai-cloud-computing/gcp-docker-golang-deploying-a-go-application-to-google-cloud-container-registry-and-cloud-run-b5056324b5d0) for more details. 
 ## Navigating the code
 This is the main file structure of our project, based on [this repository](https://github.com/CVWO/sample-go-app).
 ```
