@@ -5,7 +5,13 @@
 This is the Go backend for ThreadKeep ⬢. For more information, please refer to this [repository](https://github.com/CATISNOTSODIUM/threadkeep-frontend).
 
 - [ThreadKeep ⬢  - Your personal archive for online conversations.](#threadkeep-----your-personal-archive-for-online-conversations)
+	- [Tech stack](#tech-stack)
 	- [Getting Started](#getting-started)
+		- [Requirements](#requirements)
+		- [Setting database](#setting-database)
+		- [Running locally](#running-locally)
+		- [Running with docker](#running-with-docker)
+	- [Deployment](#deployment)
 	- [Navigating the code](#navigating-the-code)
 		- [Relevant directories/files](#relevant-directoriesfiles)
 			- [`middleware/JWT.go`](#middlewarejwtgo)
@@ -49,7 +55,7 @@ thread-keep      latest    <id>         i <time>          <size>
 ```
 To start the server, execute
 ```bash
-docker run --env-file .env -d --name thread-keep -p 5000:5000 thread-keep:latest
+docker run --env-file .env -d --name thread-keep -p 8080:8080 thread-keep:latest
 ```
 
 If this server is settled properly, you would expect to find the message `"Welcome to our api server!"` at http://localhost:5000/.
@@ -57,7 +63,7 @@ If this server is settled properly, you would expect to find the message `"Welco
 To see a list of running containers, you can use the `docker ps` command. You would expect something like this.
 ```
 CONTAINER ID   IMAGE                COMMAND    CREATED         STATUS         PORTS                                       NAMES
-<id>           thread-keep:latest   "./main"   2 minutes ago   Up 2 minutes   0.0.0.0:5000->5000/tcp, :::5000->5000/tcp   thread-keep
+<id>           thread-keep:latest   "./main"   2 minutes ago   Up 2 minutes   0.0.0.0:8080->8080/tcp, :::8080->8080/tcp   thread-keep
 ```
 To stop the container, execute `docker stop <id>` or `docker stop thread-keep`. To remove the container, run `docker rm thread-keep`.
 ## Deployment
