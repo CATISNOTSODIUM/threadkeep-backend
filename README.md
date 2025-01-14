@@ -6,9 +6,6 @@ This is the Go backend for ThreadKeep ⬢. For more information, please refer to
 
 - [ThreadKeep ⬢  - Your personal archive for online conversations.](#threadkeep-----your-personal-archive-for-online-conversations)
 	- [Getting Started](#getting-started)
-		- [Configure your `.env` file](#configure-your-env-file)
-		- [Running locally](#running-locally)
-		- [Running with docker](#running-with-docker)
 	- [Navigating the code](#navigating-the-code)
 		- [Relevant directories/files](#relevant-directoriesfiles)
 			- [`middleware/JWT.go`](#middlewarejwtgo)
@@ -30,6 +27,11 @@ JWT_SECRET_KEY=[YOUR_JWT_SECRET_KEY]
 ```
 - `DATABASE_URL`: For this project, you can host your PostgreSQL database locally (via docker) or using Neon database.
 - `JWT_SECRET_KEY`: You can choose any string you wish to choose.
+
+### Setting database
+- Schema file prisma/schema.ts
+- Generate database migration by running `go run github.com/steebchen/prisma-client-go db push`.
+
 ### Running locally
 ```bash
 go mod download
