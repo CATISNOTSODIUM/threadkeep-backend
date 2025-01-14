@@ -15,7 +15,7 @@ import (
 )
 
 
-func HandleList(w http.ResponseWriter, r *http.Request) (*api.Response, error) {
+func HandleList(w http.ResponseWriter, r *http.Request) (*api.Response, int) {
 	_skip := r.URL.Query().Get("skip")
 	_max_per_page := r.URL.Query().Get("max_per_page")
 	name := r.URL.Query().Get("name")
@@ -64,7 +64,7 @@ func HandleList(w http.ResponseWriter, r *http.Request) (*api.Response, error) {
 	return utils.WrapHTTPPayload(data, SuccessfulListThreadsMessage)
 }
 
-func HandleRetrieve(w http.ResponseWriter, r *http.Request) (*api.Response, error) {
+func HandleRetrieve(w http.ResponseWriter, r *http.Request) (*api.Response, int) {
 	if r.Method != http.MethodPost {
 		err := errors.New(ErrInvalidPostRequest)
 		return utils.WrapHTTPError(err, http.StatusBadRequest)
@@ -100,7 +100,7 @@ func HandleRetrieve(w http.ResponseWriter, r *http.Request) (*api.Response, erro
 	return utils.WrapHTTPPayload(data, SuccessfulRetrieveThreadsMessage)
 }
 
-func HandleCount(w http.ResponseWriter, r *http.Request) (*api.Response, error) {
+func HandleCount(w http.ResponseWriter, r *http.Request) (*api.Response, int) {
 	db, err := database.Connect()
 	
 	if err != nil {

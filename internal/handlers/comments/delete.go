@@ -12,7 +12,7 @@ import (
 )
 
 
-func HandleDelete(w http.ResponseWriter, r *http.Request) (*api.Response, error) {
+func HandleDelete(w http.ResponseWriter, r *http.Request) (*api.Response, int) {
 	if r.Method != http.MethodPost {
 		err := errors.New(ErrInvalidPostRequest)
 		return utils.WrapHTTPError(err, http.StatusBadRequest)

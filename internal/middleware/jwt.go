@@ -14,6 +14,7 @@ func JWT_Middleware() func(next http.Handler) http.Handler {
 			tokenString := r.Header.Get("Authorization")
 			if tokenString == "" {
 				err_json, _ := utils.WrapHTTPError(errors.New("missing authorization header"), http.StatusUnauthorized)
+				w.WriteHeader(http.StatusUnauthorized)
 				json.NewEncoder(w).Encode(err_json)
 				return
 			}
@@ -22,6 +23,7 @@ func JWT_Middleware() func(next http.Handler) http.Handler {
 			err := utils.VerifyToken(tokenString)
 			if err != nil {
 				err_json, _ := utils.WrapHTTPError(errors.New("invalid jwt token"), http.StatusUnauthorized)
+				w.WriteHeader(http.StatusForbidden)
 				json.NewEncoder(w).Encode(err_json)
 				return
 			}
