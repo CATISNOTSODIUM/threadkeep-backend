@@ -64,7 +64,7 @@ To start the server, execute
 docker run --env-file .env -d --name thread-keep -p 8080:8080 thread-keep:latest
 ```
 
-If this server is settled properly, you would expect to find the message `"Welcome to our api server!"` at http://localhost:5000/.
+If this server is settled properly, you would expect to find the message `"Welcome to our api server!"` at http://localhost:8080/.
 
 To see a list of running containers, you can use the `docker ps` command. You would expect something like this.
 ```
@@ -78,7 +78,7 @@ This project used Google Cloud Platform (GCP) for deployment. Please follow the 
 ## Database design
 // todo
 ## API Endpoints
-This project mainly use REST API to perform standard database functions. For GET endpoints, all input parameters are parsed as url parameters. For POST endpoints,  
+This project mainly use REST API to perform standard database functions. For GET endpoints, all input parameters are parsed as url parameters. For POST endpoints, the requests are handled based on JSON format. Make sure to include relevant headers: `Content-Type: application/json` and `Authorization: Bearer [JWT_TOKEN]` for protected endpoints.
 ### User routers `/user`
 - Handle all logics regarding user information.
 - The `user` API endpoint does not require authorization header.
