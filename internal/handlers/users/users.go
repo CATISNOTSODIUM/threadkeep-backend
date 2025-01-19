@@ -10,7 +10,7 @@ import (
 )
 
 
-func HandleList(w http.ResponseWriter, r *http.Request) (*api.Response, error) {
+func HandleList(w http.ResponseWriter, r *http.Request) (*api.Response, int) {
 	db, err := database.Connect()
 	if err != nil {
 		return utils.WrapHTTPError(err, http.StatusInternalServerError)

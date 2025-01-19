@@ -13,7 +13,7 @@ import (
 
 
 
-func HandleTag(w http.ResponseWriter, r *http.Request) (*api.Response, error) {
+func HandleTag(w http.ResponseWriter, r *http.Request) (*api.Response, int) {
 	if r.Method != http.MethodPost {
 		err := errors.New(ErrInvalidPostRequest)
 		return utils.WrapHTTPError(err, http.StatusBadRequest)
@@ -50,7 +50,7 @@ func HandleTag(w http.ResponseWriter, r *http.Request) (*api.Response, error) {
 }
 
 
-func HandleTagList(w http.ResponseWriter, r *http.Request) (*api.Response, error) {
+func HandleTagList(w http.ResponseWriter, r *http.Request) (*api.Response, int) {
 	db, err := database.Connect()
 	
 	if err != nil {

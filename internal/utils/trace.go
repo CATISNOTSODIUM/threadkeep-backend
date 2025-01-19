@@ -4,9 +4,6 @@ import (
 	"fmt"
 	"net/http"
 	"runtime"
-
-	"github.com/pkg/errors"
-
 	"github.com/CATISNOTSODIUM/threadkeep-backend/internal/api"
 )
 func CallerName(skip int) string {
@@ -24,29 +21,29 @@ func CallerName(skip int) string {
 // simple error handler system
 // report error based on function name
 
-func WrapHTTPError(err error, errorCode int) (*api.Response, error) {
+func WrapHTTPError(err error, errorCode int) (*api.Response, int) {
         errorMessage := fmt.Sprintln(CallerName(1), err.Error())
         return &api.Response{ 
                 Payload: api.Payload{},
                 Messages: []string{errorMessage},
                 ErrorCode: errorCode,
-	}, errors.Wrap(err, errorMessage)
+	}, errorCode
 }
 
-func WrapHTTPSuccess(message string) (*api.Response, error) {
+func WrapHTTPSuccess(message string) (*api.Response, int) {
         successMessage := fmt.Sprintln(CallerName(1), message)
         return &api.Response{ 
                 Payload: api.Payload{},
                 Messages: []string{successMessage},
                 ErrorCode: http.StatusOK,
-	}, nil
+	}, http.StatusOK
 }
 
-func WrapHTTPPayload(data []byte, message string) (*api.Response, error) {
+func WrapHTTPPayload(data []byte, message string) (*api.Response, int) {
         return &api.Response{
                 Payload: api.Payload{
                         Data: data,
                 },
                 Messages: []string{message},
-        }, nil
+        }, http.StatusOK
 }

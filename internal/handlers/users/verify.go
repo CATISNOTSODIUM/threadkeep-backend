@@ -11,8 +11,8 @@ import (
 )
 
 
-
-func HandleVerify(w http.ResponseWriter, r *http.Request) (*api.Response, error) {
+// todo
+func HandleVerify(w http.ResponseWriter, r *http.Request) (*api.Response, int) {
 	if r.Method != http.MethodPost {
 		err := errors.New(ErrInvalidPostRequest)
 		return utils.WrapHTTPError(err, http.StatusBadRequest)
@@ -35,15 +35,18 @@ func HandleVerify(w http.ResponseWriter, r *http.Request) (*api.Response, error)
 
 	user, isVerified := query.VerifyUser(db, userRequest.Name, userRequest.Password)
 	
-	data, err := json.Marshal(isVerified)
+	var data []byte
 	
 	if isVerified {
 		data, err = json.Marshal(user)
+	} else {
+		return utils.WrapHTTPError(errors.New("cannot verify user"), http.StatusUnauthorized)
 	}
 	
 	if err != nil {
 		return utils.WrapHTTPError(err, http.StatusBadRequest)
 	}
+
 
 	return utils.WrapHTTPPayload(data, SuccessfulVerifyUser)
 	

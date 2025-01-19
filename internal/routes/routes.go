@@ -13,8 +13,9 @@ import (
 func GetRoutes() func(r chi.Router) {
 	return func(r chi.Router) {
 		r.Get("/", func(w http.ResponseWriter, req *http.Request) {
-			response, _ := handler.Index(w, req)
+			response, httpCode := handler.Index(w, req)
 			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(httpCode)
 			json.NewEncoder(w).Encode(response)
 		})
 		UserRoutes(r)

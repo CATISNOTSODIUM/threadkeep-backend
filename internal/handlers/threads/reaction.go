@@ -13,7 +13,7 @@ import (
 )
 
 
-func HandleIsLikeThread(w http.ResponseWriter, r *http.Request) (*api.Response, error) {
+func HandleIsLikeThread(w http.ResponseWriter, r *http.Request) (*api.Response, int) {
 	if r.Method != http.MethodPost {
 		err := errors.New(ErrInvalidPostRequest)
 		return utils.WrapHTTPError(err, http.StatusBadRequest)
@@ -46,7 +46,7 @@ func HandleIsLikeThread(w http.ResponseWriter, r *http.Request) (*api.Response, 
 }
 
 
-func HandleReactThread(w http.ResponseWriter, r *http.Request) (*api.Response, error) {
+func HandleReactThread(w http.ResponseWriter, r *http.Request) (*api.Response, int) {
 	if r.Method != http.MethodPost {
 		err := errors.New(ErrInvalidPostRequest)
 		return utils.WrapHTTPError(err, http.StatusBadRequest)
