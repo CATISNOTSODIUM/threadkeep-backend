@@ -8,6 +8,6 @@ import (
 
 func Index(w http.ResponseWriter, r *http.Request) (*api.Response, int) {
 	return &api.Response{
-		Messages: []string{"Welcome to our threadkeep api server!"},
-	}, http.StatusAccepted
+		Messages: []string{"Welcome to our threadkeep api server v2."},
+	}, nil
 }
