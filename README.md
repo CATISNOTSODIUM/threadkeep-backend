@@ -64,7 +64,7 @@ To start the server, execute
 docker run --env-file .env -d --name thread-keep -p 8080:8080 thread-keep:latest
 ```
 
-If this server is settled properly, you would expect to find the message `"Welcome to our api server!"` at http://localhost:5000/.
+If this server is settled properly, you would expect to find the message `"Welcome to our api server!"` at http://localhost:8080/.
 
 To see a list of running containers, you can use the `docker ps` command. You would expect something like this.
 ```
