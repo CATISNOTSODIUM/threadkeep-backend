@@ -46,6 +46,7 @@ JWT_SECRET_KEY=[YOUR_JWT_SECRET_KEY]
 Make sure that you have created your `.env` file before starting the server.
 ```bash
 go mod download
+go run cmd/tag/main.go // add tags to your database
 go run cmd/server/main.go
 ```
 ### Running with docker
