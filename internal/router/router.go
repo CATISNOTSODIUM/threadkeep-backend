@@ -9,13 +9,11 @@ import (
 func Setup() chi.Router {
 	r := chi.NewRouter()
 	r.Use(cors.Handler(cors.Options{
-			// AllowedOrigins:   []string{"https://foo.com"}, // Use this to allow specific origin hosts
 			AllowedOrigins:   []string{"http://localhost:3000", "https://threadkeep-frontend.vercel.app"},
-			// AllowOriginFunc:  func(r *http.Request, origin string) bool { return true },
 			AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 			AllowedHeaders:   []string{"Accept", "Accept-Language", "Authorization", "Content-Type"},
 			AllowCredentials: true,
-			MaxAge:           300, // Maximum value not ignored by any of major browsers
+			MaxAge:           300, 
 	}))
 	setUpRoutes(r)
 	return r

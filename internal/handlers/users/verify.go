@@ -11,7 +11,6 @@ import (
 )
 
 
-// todo
 func HandleVerify(w http.ResponseWriter, r *http.Request) (*api.Response, int) {
 	if r.Method != http.MethodPost {
 		err := errors.New(ErrInvalidPostRequest)

@@ -2,7 +2,6 @@ package mutation
 
 import (
 	"context"
-
 	"github.com/CATISNOTSODIUM/threadkeep-backend/internal/database"
 	"github.com/CATISNOTSODIUM/threadkeep-backend/internal/models"
 	"github.com/CATISNOTSODIUM/threadkeep-backend/prisma/db"

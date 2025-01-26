@@ -3,7 +3,6 @@ package mutation
 import (
 	"context"
 	"time"
-
 	"github.com/CATISNOTSODIUM/threadkeep-backend/internal/dataaccess/query"
 	"github.com/CATISNOTSODIUM/threadkeep-backend/internal/database"
 	"github.com/CATISNOTSODIUM/threadkeep-backend/internal/models"

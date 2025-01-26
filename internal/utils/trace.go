@@ -6,6 +6,8 @@ import (
 	"runtime"
 	"github.com/CATISNOTSODIUM/threadkeep-backend/internal/api"
 )
+
+// Trace the origin of the function name
 func CallerName(skip int) string {
         pc, _, _, ok := runtime.Caller(skip + 1)
         if !ok {

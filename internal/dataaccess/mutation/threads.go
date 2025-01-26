@@ -31,9 +31,6 @@ func CreateThread(currentDB * database.Database, user * models.User, title strin
 
 	tagsList := [] models.Tag{}
 	
-	// create and link
-
-	// fix
 	for _, tag := range tags {
 		threadTagObject, err := currentDB.Client.TagsOnThreads.CreateOne(
 			db.TagsOnThreads.Thread.Link(
